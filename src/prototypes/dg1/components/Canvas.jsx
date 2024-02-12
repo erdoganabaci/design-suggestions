@@ -23,16 +23,30 @@ const Canvas = () => {
   const renderDroppedItem = (item) => {
     switch (item.type) {
       case "button":
-        return <Button key={item.text}>{item.text}</Button>
+        return (
+          <Box mt={1}>
+            <Button variant="contained" key={item.text}>
+              {item.text}
+            </Button>
+          </Box>
+        )
       case "text":
         return (
-          <Typography key={item.text} variant="body1">
-            {item.text}
-          </Typography>
+          <Box mt={1}>
+            <Typography key={item.text} variant="body1">
+              {item.text}
+            </Typography>
+          </Box>
         )
       case "image":
         return (
-          <Box key={item.src} component="img" src={item.src} alt={item.alt} sx={{ width: "100px", height: "100px" }} />
+          <Box
+            key={item.src}
+            component="img"
+            src={item.src}
+            alt={item.alt}
+            sx={{ width: "100px", height: "100px", marginTop: 1 }}
+          />
         )
       default:
         return (
@@ -44,10 +58,13 @@ const Canvas = () => {
   }
   return (
     <Paper ref={dropRef} style={{ minHeight: "400px", width: "300px" }}>
-      <div style={{ position: "relative" }}>
+      <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline" }}>
+        Canvas
+      </Typography>
+      <Box style={{ position: "relative" }}>
         {/* For potential positioning */}
         {droppedItems.map((item) => renderDroppedItem(item))}
-      </div>
+      </Box>
     </Paper>
   )
 }

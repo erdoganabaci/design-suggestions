@@ -4,7 +4,7 @@ import DraggableElement from "./DraggableElement" // Import other drag/drop comp
 
 const Sidebar = () => {
   const elements = [
-    { type: "button", text: "Button 1" },
+    { type: "button", text: "Button" },
     { type: "text", text: "Heading" },
     { type: "image", src: "https://placehold.co/600x400/black/white", alt: "Image description" },
     // Add more elements as needed

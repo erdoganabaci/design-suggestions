@@ -15,7 +15,7 @@ const DraggableElement = ({ type, text, src, alt }) => {
   const renderElement = () => {
     switch (type) {
       case "button":
-        return <Button>{text}</Button>
+        return <Button variant="contained">{text}</Button>
       case "text":
         return <Typography variant="body1">{text}</Typography>
       case "image":
