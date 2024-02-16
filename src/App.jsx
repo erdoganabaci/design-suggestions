@@ -1,10 +1,11 @@
 import "./App.css"
-import DG1Prototype from "./prototypes/dg1"
+// import DG1Prototype from "./prototypes/dg1"
+import DG2Prototype from "./prototypes/dg2"
 
 function App() {
   return (
     <>
-      <DG1Prototype />
+      <DG2Prototype />
     </>
   )
 }
