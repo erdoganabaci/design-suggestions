@@ -40,10 +40,11 @@ const DG4Prototype = () => {
           <Canvas />
         </Grid>
       )}
-      <Grid item xs={!closeCanvas ? 3 : 6} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
-        {/* <DesignSuggestions /> */}
-        <Chatbot />
-      </Grid>
+      <Chatbot />
+
+      {/* <Grid item xs={!closeCanvas ? 3 : 6} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
+        <DesignSuggestions />
+      </Grid> */}
     </Grid>
   )
 }
