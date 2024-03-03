@@ -8,9 +8,9 @@ const DG1Prototype = () => {
     <Grid
       container
       // spacing={2}
-      marginTop={4}
+      // marginTop={4}
       padding={"10px"}
-      style={{ width: "100vw", height: "90vh" }}
+      style={{ width: "100vw", height: "100vh" }}
       justifyContent={"space-between"}
       // gap={1}
       display={"flex"}
@@ -39,7 +39,7 @@ const DG1Prototype = () => {
           </Button>
         </Grid>
       </Grid>
-      <Grid item xs={4} xl={4} display={"flex"} justifyContent={"center"}>
+      <Grid item xs={4} xl={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Canvas />
       </Grid>
       <Grid item xs={4} xl={4} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>

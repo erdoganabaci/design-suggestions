@@ -57,15 +57,17 @@ const Canvas = () => {
     }
   }
   return (
-    <Paper ref={dropRef} style={{ minHeight: "400px", width: "100%" }}>
-      <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline" }}>
+    <>
+      <Typography variant="h6" gutterBottom component="div" sx={{ textDecoration: "underline" }}>
         Canvas
       </Typography>
-      <Box style={{ position: "relative" }}>
-        {/* For potential positioning */}
-        {droppedItems.map((item) => renderDroppedItem(item))}
-      </Box>
-    </Paper>
+      <Paper ref={dropRef} style={{ height: "100%", width: "100%" }}>
+        <Box style={{ position: "relative" }}>
+          {/* For potential positioning */}
+          {droppedItems.map((item) => renderDroppedItem(item))}
+        </Box>
+      </Paper>
+    </>
   )
 }
 
