@@ -17,8 +17,8 @@ const DG1Prototype = () => {
     >
       <Grid
         item
-        xs={4}
-        xl={4}
+        xs={2}
+        xl={2}
         sx={{ border: "1px solid black" }}
         style={{ paddingTop: 0, overflow: "auto" }}
         display={"flex"}
@@ -42,7 +42,7 @@ const DG1Prototype = () => {
       <Grid item xs={4} xl={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Canvas />
       </Grid>
-      <Grid item xs={4} xl={4} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
+      <Grid item xs={2} xl={2} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
         <DesignSuggestions />
       </Grid>
     </Grid>

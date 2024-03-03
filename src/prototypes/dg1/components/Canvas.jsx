@@ -1,7 +1,43 @@
-import React, { useState, useRef } from "react"
+import { useState, useRef } from "react"
 import { Paper } from "@mui/material"
 import { useDrop } from "react-dnd"
 import { Button, Typography, Box } from "@mui/material" // Import other MUI components as needed
+import { styled } from "@mui/material/styles"
+
+// iPad-like styles
+const Device = styled("div")(({ theme }) => ({
+  border: "2px solid #ccc",
+  padding: "20px 24px 15px",
+  borderRadius: "40px",
+  width: "768px",
+  height: "85vh",
+  boxSizing: "content-box",
+}))
+
+const Camera = styled("div")({
+  height: "12px",
+  width: "12px",
+  margin: "0 auto 3px",
+  border: "2px solid #ccc",
+  borderRadius: "12px",
+})
+
+const Screen = styled("div")({
+  height: "75vh",
+  width: "768px",
+  border: "1px solid #ccc",
+  backgroundColor: "#000",
+  overflow: "hidden",
+  borderRadius: "3px",
+})
+
+const ButtonCircle = styled("div")({
+  margin: "15px auto 0",
+  height: "45px",
+  width: "45px",
+  border: "2px solid #ccc",
+  borderRadius: "60px",
+})
 
 const Canvas = () => {
   const [droppedItems, setDroppedItems] = useState([])
@@ -56,17 +92,21 @@ const Canvas = () => {
         ) // More visible feedback
     }
   }
+
   return (
     <>
-      <Typography variant="h6" gutterBottom component="div" sx={{ textDecoration: "underline" }}>
+      <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline", color: "black", textAlign: "center" }}>
         Canvas
       </Typography>
-      <Paper ref={dropRef} style={{ height: "100%", width: "100%" }}>
-        <Box style={{ position: "relative" }}>
-          {/* For potential positioning */}
-          {droppedItems.map((item) => renderDroppedItem(item))}
-        </Box>
-      </Paper>
+      <Device id={"device"}>
+        <Camera />
+        <Screen id={"screen"}>
+          <Paper ref={dropRef} elevation={0} sx={{ height: "100%", bgcolor: "white" }}>
+            <Box sx={{ position: "relative" }}>{droppedItems.map((item) => renderDroppedItem(item))}</Box>
+          </Paper>
+        </Screen>
+        <ButtonCircle />
+      </Device>
     </>
   )
 }
