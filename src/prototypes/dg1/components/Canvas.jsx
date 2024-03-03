@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles"
 
 // iPad-like styles
 const Device = styled("div")(({ theme }) => ({
-  border: "2px solid #ccc",
+  border: "2px solid #000000",
   padding: "20px 24px 15px",
   borderRadius: "40px",
   width: "768px",
@@ -18,14 +18,14 @@ const Camera = styled("div")({
   height: "12px",
   width: "12px",
   margin: "0 auto 3px",
-  border: "2px solid #ccc",
+  border: "2px solid #000000",
   borderRadius: "12px",
 })
 
 const Screen = styled("div")({
   height: "75vh",
   width: "768px",
-  border: "1px solid #ccc",
+  border: "1px solid #000000",
   backgroundColor: "#000",
   overflow: "hidden",
   borderRadius: "3px",
@@ -35,7 +35,7 @@ const ButtonCircle = styled("div")({
   margin: "15px auto 0",
   height: "45px",
   width: "45px",
-  border: "2px solid #ccc",
+  border: "2px solid #000000",
   borderRadius: "60px",
 })
 
