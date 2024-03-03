@@ -57,7 +57,7 @@ const Canvas = () => {
     }
   }
   return (
-    <Paper ref={dropRef} style={{ minHeight: "400px", width: "300px", marginRight: 10 }}>
+    <Paper ref={dropRef} style={{ minHeight: "400px", width: "100%" }}>
       <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline" }}>
         Canvas
       </Typography>

@@ -5,14 +5,25 @@ import Sidebar from "./components/Sidebar"
 
 const DG1Prototype = () => {
   return (
-    <Grid container spacing={2}>
+    <Grid
+      container
+      // spacing={2}
+      marginTop={4}
+      padding={"10px"}
+      style={{ width: "100vw", height: "90vh" }}
+      justifyContent={"space-between"}
+      // gap={1}
+      display={"flex"}
+    >
       <Grid
         item
-        xs={3}
+        xs={4}
+        xl={4}
         sx={{ border: "1px solid black" }}
-        style={{ paddingTop: 0 }}
+        style={{ paddingTop: 0, overflow: "auto" }}
         display={"flex"}
         flexDirection={"column"}
+        alignItems={"center"}
         justifyContent={"space-between"}
       >
         <Grid display={"flex"} flexDirection={"column"}>
@@ -21,14 +32,17 @@ const DG1Prototype = () => {
           </Typography>
           <Sidebar />
         </Grid>
-        <Grid width={"10px"} mb={1}>
-          <Button variant="contained">Generate Designs</Button>
+        <Grid mb={1}>
+          {/* <Button variant="contained">Generate Designs</Button> */}
+          <Button variant="contained" sx={{ m: 2, alignSelf: "center" }}>
+            Generate Designs
+          </Button>
         </Grid>
       </Grid>
-      <Grid item xs={6} display={"flex"} justifyContent={"center"}>
+      <Grid item xs={4} xl={4} display={"flex"} justifyContent={"center"}>
         <Canvas />
       </Grid>
-      <Grid item xs={3} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
+      <Grid item xs={4} xl={4} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
         <DesignSuggestions />
       </Grid>
     </Grid>
