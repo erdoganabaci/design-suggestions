@@ -53,7 +53,7 @@ const DesignSuggestions = () => {
         Suggestions
       </Typography>
       {displaySuggestions && (
-        <Grid container direction="column" spacing={2}>
+        <Grid container direction="column">
           {suggestions.map((suggestion, index) => (
             <Grid item key={index} sx={{ padding: "16px" }}>
               <Paper elevation={3}>
