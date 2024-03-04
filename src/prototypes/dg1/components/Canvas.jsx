@@ -9,7 +9,11 @@ const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
   padding: "20px 24px 15px",
   borderRadius: "40px",
-  width: "768px",
+  minWidth: "768px",
+  [theme.breakpoints.down("md")]: {
+    // Adjust for screens smaller than 1200px
+    minWidth: "300px", // Set minimum width to 300px for smaller screens
+  },
   height: "85vh",
   boxSizing: "content-box",
 }))
@@ -22,14 +26,19 @@ const Camera = styled("div")({
   borderRadius: "12px",
 })
 
-const Screen = styled("div")({
+const Screen = styled("div")(({ theme }) => ({
   height: "75vh",
-  width: "768px",
+  minWidth: "768px",
+  [theme.breakpoints.down("md")]: {
+    // Adjust for screens smaller than 1200px
+    minWidth: "300px", // Set minimum width to 300px for smaller screens
+  },
+  // width: "100%",
   border: "1px solid #000000",
   backgroundColor: "#000",
   overflow: "hidden",
   borderRadius: "3px",
-})
+}))
 
 const ButtonCircle = styled("div")({
   margin: "15px auto 0",
