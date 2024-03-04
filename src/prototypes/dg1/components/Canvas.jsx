@@ -3,7 +3,7 @@ import { Paper } from "@mui/material"
 import { useDrop } from "react-dnd"
 import { Button, Typography, Box } from "@mui/material" // Import other MUI components as needed
 import { styled } from "@mui/material/styles"
-
+import EditElementDialog from "./EditElementDialog"
 // iPad-like styles
 const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
@@ -48,9 +48,15 @@ const ButtonCircle = styled("div")({
   borderRadius: "60px",
 })
 
+const uniqueId = () => {
+  return Math.random().toString(36).substr(2, 9)
+}
+
 const Canvas = () => {
-  const [droppedItems, setDroppedItems] = useState([])
   const dropRef = useRef(null)
+  const [droppedItems, setDroppedItems] = useState([])
+  const [editingItem, setEditingItem] = useState(null) // To track the currently editing item
+  const [editDialogOpen, setEditDialogOpen] = useState(false) // To track if the edit dialog is open
 
   const handleDrop = (item, monitor) => {
     if (!monitor) {
@@ -75,7 +81,19 @@ const Canvas = () => {
       const y = clientOffset.y - componentRect.top
 
       console.log("Dropping item at:", x, y)
-      setDroppedItems([...droppedItems, { ...item, x, y }])
+
+      // Generate a unique ID for the new item
+      const newItemId = uniqueId()
+
+      // Create the new item with its properties and add it to the droppedItems array
+      const newItem = {
+        ...item,
+        id: newItemId, // Assign a unique ID to the new item
+        x: x,
+        y: y,
+      }
+
+      setDroppedItems([...droppedItems, newItem])
     }
   }
 
@@ -89,24 +107,55 @@ const Canvas = () => {
 
   drop(dropRef) // Attach the drop ref here
 
+  // Handler to open dialog for editing
+  const handleDoubleClick = (item) => {
+    setEditingItem(item)
+    setEditDialogOpen(true)
+  }
+
+  // Handler to update text
+  const handleTextChange = (newText) => {
+    setEditingItem({ ...editingItem, text: newText })
+  }
+
+  // Handler to update color (for buttons)
+  const handleColorChange = (newColor) => {
+    setEditingItem({ ...editingItem, color: newColor })
+  }
+
+  // Handler to close the dialog and update the item in droppedItems
+  const handleSaveDialog = () => {
+    setEditDialogOpen(false)
+    if (editingItem) {
+      const updatedItems = droppedItems.map((item) =>
+        item.id === editingItem.id ? { ...item, text: editingItem.text, color: editingItem.color } : item,
+      )
+      setDroppedItems(updatedItems)
+    }
+    setEditingItem(null) // Reset the editing item
+  }
+
+  const handleRemoveItem = (itemId) => {
+    setDroppedItems(droppedItems.filter((item) => item.id !== itemId))
+    setEditDialogOpen(false) // Close the dialog after removing the item
+  }
+
   // Render a dropped item based on its type
   const renderDroppedItem = (item) => {
     switch (item.type) {
       case "button":
         return (
-          <Box mt={1}>
-            <Button variant="contained" key={item.text}>
+          <Box mt={1} onDoubleClick={() => handleDoubleClick(item)}>
+            <Button variant="contained" key={item.text} style={{ backgroundColor: item.color }}>
               {item.text}
             </Button>
           </Box>
         )
       case "text":
         return (
-          <Box mt={1}>
-            <Typography key={item.text} variant="body1">
-              {item.text}
-            </Typography>
-          </Box>
+          <Typography key={item.text} variant="body1" onDoubleClick={() => handleDoubleClick(item)}>
+            {item.text}
+          </Typography>
         )
       case "image":
         return (
@@ -116,6 +165,7 @@ const Canvas = () => {
             src={item.src}
             alt={item.alt}
             sx={{ width: "100px", height: "100px", marginTop: 1 }}
+            onDoubleClick={() => handleDoubleClick(item)}
           />
         )
       default:
@@ -155,6 +205,15 @@ const Canvas = () => {
         </Screen>
         <ButtonCircle />
       </Device>
+
+      <EditElementDialog
+        open={editDialogOpen}
+        onClose={handleSaveDialog}
+        element={editingItem}
+        onTextChange={handleTextChange}
+        onColorChange={handleColorChange}
+        onRemove={handleRemoveItem}
+      />
     </>
   )
 }
