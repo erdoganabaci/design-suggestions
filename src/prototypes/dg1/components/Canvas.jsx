@@ -41,19 +41,44 @@ const ButtonCircle = styled("div")({
 
 const Canvas = () => {
   const [droppedItems, setDroppedItems] = useState([])
-  const canvasRef = useRef(null)
+  const dropRef = useRef(null)
 
-  const [{ isOver }, dropRef] = useDrop({
+  const handleDrop = (item, monitor) => {
+    if (!monitor) {
+      console.log("Drop attempted without a monitor object")
+      return
+    }
+
+    const didDrop = monitor.didDrop()
+    console.log("Item didDrop", didDrop)
+
+    if (didDrop) {
+      console.log("Item already dropped")
+      return
+    }
+
+    const clientOffset = monitor.getClientOffset()
+    const componentRect = dropRef.current.getBoundingClientRect()
+
+    if (clientOffset) {
+      // Convert the drop coordinates to be relative to the canvas
+      const x = clientOffset.x - componentRect.left
+      const y = clientOffset.y - componentRect.top
+
+      console.log("Dropping item at:", x, y)
+      setDroppedItems([...droppedItems, { ...item, x, y }])
+    }
+  }
+
+  const [{ isOver }, drop] = useDrop({
     accept: ["button", "text", "image"], // Update accepted types if needed
-    drop: (item) => handleDrop(item),
+    drop: (item, monitor) => handleDrop(item, monitor),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   })
 
-  const handleDrop = (item) => {
-    setDroppedItems([...droppedItems, item])
-  }
+  drop(dropRef) // Attach the drop ref here
 
   // Render a dropped item based on its type
   const renderDroppedItem = (item) => {
@@ -102,7 +127,21 @@ const Canvas = () => {
         <Camera />
         <Screen id={"screen"}>
           <Paper ref={dropRef} elevation={0} sx={{ height: "100%", bgcolor: "white" }}>
-            <Box sx={{ position: "relative" }}>{droppedItems.map((item) => renderDroppedItem(item))}</Box>
+            <Box sx={{ position: "relative" }}>
+              {droppedItems.map((item, index) => (
+                <div
+                  key={index}
+                  style={{
+                    position: "absolute",
+                    left: `${item.x}px`,
+                    top: `${item.y}px`,
+                    // any other styling for positioning
+                  }}
+                >
+                  {renderDroppedItem(item)}
+                </div>
+              ))}
+            </Box>
           </Paper>
         </Screen>
         <ButtonCircle />
