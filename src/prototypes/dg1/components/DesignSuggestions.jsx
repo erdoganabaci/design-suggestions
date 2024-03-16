@@ -27,16 +27,22 @@ const DesignSuggestions = () => {
         title: "Spacing Adjustment",
         description: "Consider increasing margin...",
         image: "https://placehold.co/600x400/black/white", // Replace with your image path
+        headerText: "Light1 Header",
+        buttonText: "Light2",
       },
       {
         title: "Color Contrast",
         description: "Check accessibility ratios...",
         image: "https://placehold.co/600x400/black/white", // Replace with your image path
+        headerText: "Light2 Header",
+        buttonText: "Light2",
       },
       {
         title: "Color Contrast",
         description: "Resize image ...",
         image: "https://placehold.co/600x400/black/white", // Replace with your image path
+        headerText: "Light3 Header",
+        buttonText: "Light3",
       },
       // {
       //   title: "Color Contrast",
@@ -54,7 +60,7 @@ const DesignSuggestions = () => {
       </Typography>
       {displaySuggestions && (
         <Grid container direction="column">
-          {suggestions.map((suggestion, index) => (
+          {/* {suggestions.map((suggestion, index) => (
             <Grid item key={index} sx={{ padding: "16px" }}>
               <Paper elevation={3}>
                 <Typography variant="h6" gutterBottom>
@@ -75,7 +81,136 @@ const DesignSuggestions = () => {
                 </Box>
               </Paper>
             </Grid>
-          ))}
+          ))} */}
+
+          <Grid item key={1} sx={{ padding: "16px" }}>
+            <Paper elevation={3}>
+              <Typography variant="h6" gutterBottom>
+                Light1 Header
+              </Typography>
+              <Box mb={1}>
+                <Button
+                  sx={{ width: "1px", fontSize: "10px", backgroundColor: "purple", color: "white" }}
+                  variant="contained"
+                >
+                  Light1
+                </Button>
+              </Box>
+              <img
+                src={"https://placehold.co/600x400/black/white"}
+                alt={`Preview ${1}`}
+                style={{ width: "100%", height: "50px" }}
+              />
+              <Box display="flex" justifyContent="flex-end">
+                <Tooltip
+                  title={
+                    <>
+                      Consider increasing margin...
+                      <br />
+                      <a
+                        href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
+                        target="_blank"
+                        // rel="noopener noreferrer"
+                        style={{ color: "skyblue" }}
+                      >
+                        Read more
+                      </a>
+                    </>
+                  }
+                  placement="right"
+                >
+                  <IconButton>
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Paper>
+          </Grid>
+
+          <Grid item key={2} sx={{ padding: "16px" }}>
+            <Paper elevation={3}>
+              <img
+                src={"https://placehold.co/600x400/black/white"}
+                alt={`Preview ${2}`}
+                style={{ width: "100%", height: "50px" }}
+              />
+              <Box mb={1}>
+                <Button sx={{ width: "1px", fontSize: "10px" }} variant="contained">
+                  Light2
+                </Button>
+              </Box>
+
+              <Box display="flex" justifyContent="flex-end">
+                <Tooltip
+                  title={
+                    <>
+                      Accessibility and structure tip: Headers should be placed at the top for clear content hierarchy.
+                      <a
+                        href="https://material.io/design/typography/understanding-typography.html#usage"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "skyblue" }}
+                      >
+                        Learn more
+                      </a>
+                    </>
+                  }
+                  placement="right"
+                >
+                  <IconButton>
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Typography variant="h6" gutterBottom>
+                Light2 Header
+              </Typography>
+            </Paper>
+          </Grid>
+
+          <Grid item key={3} sx={{ padding: "16px" }}>
+            <Paper elevation={3}>
+              <Typography variant="h6" gutterBottom>
+                Light3 Header
+              </Typography>
+              <img
+                src={"https://placehold.co/600x400/black/white"}
+                alt={`Preview ${3}`}
+                style={{ width: "100%", height: "50px" }}
+              />
+              <Box mb={1}>
+                <Button
+                  sx={{ width: "1px", fontSize: "10px", backgroundColor: "yellow", color: "white" }}
+                  variant="contained"
+                >
+                  Light3
+                </Button>
+              </Box>
+
+              <Box display="flex" justifyContent="flex-end">
+                <Tooltip
+                  title={
+                    <>
+                      Accessibility tip: Ensure black text contrasts well with background.
+                      <a
+                        href="https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "skyblue" }}
+                      >
+                        Learn more
+                      </a>
+                    </>
+                  }
+                  placement="right"
+                >
+                  <IconButton>
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            </Paper>
+          </Grid>
         </Grid>
       )}
     </Box>
