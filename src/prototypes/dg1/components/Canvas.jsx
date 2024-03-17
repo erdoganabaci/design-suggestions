@@ -1,8 +1,10 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Paper } from "@mui/material"
 import { useDrop } from "react-dnd"
 import { Button, Typography, Box } from "@mui/material" // Import other MUI components as needed
 import { styled } from "@mui/material/styles"
+import { useAtom } from "jotai"
+import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import EditElementDialog from "./EditElementDialog"
 // iPad-like styles
 const Device = styled("div")(({ theme }) => ({
@@ -57,7 +59,7 @@ const Canvas = () => {
   const [droppedItems, setDroppedItems] = useState([])
   const [editingItem, setEditingItem] = useState(null) // To track the currently editing item
   const [editDialogOpen, setEditDialogOpen] = useState(false) // To track if the edit dialog is open
-
+  const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
   const handleDrop = (item, monitor) => {
     if (!monitor) {
       console.log("Drop attempted without a monitor object")
@@ -88,6 +90,7 @@ const Canvas = () => {
       // Create the new item with its properties and add it to the droppedItems array
       const newItem = {
         ...item,
+        color: "#dde8fa",
         id: newItemId, // Assign a unique ID to the new item
         x: x,
         y: y,
@@ -140,13 +143,17 @@ const Canvas = () => {
     setEditDialogOpen(false) // Close the dialog after removing the item
   }
 
+  useEffect(() => {
+    setCanvasDroppedItems(droppedItems)
+  }, [setCanvasDroppedItems, droppedItems])
+
   // Render a dropped item based on its type
   const renderDroppedItem = (item) => {
     switch (item.type) {
       case "button":
         return (
           <Box mt={1} onDoubleClick={() => handleDoubleClick(item)}>
-            <Button variant="contained" key={item.text} style={{ backgroundColor: item.color }}>
+            <Button variant="contained" key={item.text} style={{ backgroundColor: item.color, color: "black" }}>
               {item.text}
             </Button>
           </Box>
@@ -176,6 +183,8 @@ const Canvas = () => {
         ) // More visible feedback
     }
   }
+
+  // console.log("droppedItems", droppedItems)
 
   return (
     <>

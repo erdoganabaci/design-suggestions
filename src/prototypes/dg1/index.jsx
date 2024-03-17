@@ -34,9 +34,9 @@ const DG1Prototype = () => {
         </Grid>
         <Grid mb={1}>
           {/* <Button variant="contained">Generate Designs</Button> */}
-          <Button variant="contained" sx={{ m: 2, alignSelf: "center" }}>
+          {/* <Button variant="contained" sx={{ m: 2, alignSelf: "center" }}>
             Generate Designs
-          </Button>
+          </Button> */}
         </Grid>
       </Grid>
       <Grid item xs={4} xl={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
