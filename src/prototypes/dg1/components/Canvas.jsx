@@ -196,7 +196,7 @@ const Canvas = () => {
         <Screen id={"screen"}>
           <Paper ref={dropRef} elevation={0} sx={{ height: "100%", bgcolor: "white" }}>
             <Box sx={{ position: "relative" }}>
-              {droppedItems.map((item, index) => (
+              {canvasDroppedItems.map((item, index) => (
                 <div
                   key={index}
                   style={{

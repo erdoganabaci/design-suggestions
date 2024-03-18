@@ -1,7 +1,82 @@
 import { Grid, Paper, Typography, IconButton, Tooltip, Box, Button } from "@mui/material"
 import InfoIcon from "@mui/icons-material/Info"
+import { canvasDroppedItemsAtom } from "../../store/droppedItems.atom"
+import { useAtom } from "jotai"
+import { displaySuggestionsAtom } from "../../store/displaySuggestions.atom"
+
+const firstScenarioSuggestions = [
+  {
+    type: "button",
+    text: "TV",
+    color: "#dde8fa",
+    id: "0z9y289c3",
+    x: 338,
+    y: 322,
+  },
+  {
+    type: "button",
+    text: "TV LIGHT",
+    color: "#dde8fa",
+    id: "tmtqqasmi",
+    x: 330,
+    y: 132,
+  },
+  {
+    type: "button",
+    text: "CEILING LIGHT",
+    color: "#dde8fa",
+    id: "qmxnfyqra",
+    x: 307,
+    y: 77,
+  },
+]
+
+const secondScenarioSuggestions = [
+  {
+    type: "button",
+    text: "TV",
+    color: "#dde8fa",
+    id: "0z9y289c3",
+    x: 338,
+    y: 322,
+  },
+  {
+    type: "button",
+    text: "CEILING LIGHT",
+    color: "#dde8fa",
+    id: "qmxnfyqra",
+    x: 307,
+    y: 77,
+  },
+  {
+    type: "button",
+    text: "TV LIGHT",
+    color: "#dde8fa",
+    id: "ruvrw27py",
+    x: 318,
+    y: 278,
+  },
+]
 
 const FirstScenario = () => {
+  const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
+  const [displaySuggestions, setDisplaySuggestions] = useAtom(displaySuggestionsAtom)
+
+  const onHandleFirstSuggeestionApply = () => {
+    console.log("First suggestion applied")
+    setCanvasDroppedItems(firstScenarioSuggestions)
+    setDisplaySuggestions({
+      display: false,
+      isManual: true,
+    })
+  }
+
+  const onHandleSecondSuggeestionApply = () => {
+    console.log("Second suggestion applied")
+    setCanvasDroppedItems(secondScenarioSuggestions)
+    setDisplaySuggestions(false)
+  }
+
   return (
     <>
       <Grid item key={1} sx={{ padding: "10px" }}>
@@ -81,8 +156,9 @@ const FirstScenario = () => {
             </Tooltip>
           </Box>
 
-          <Box display={"flex"} gap={"5px"} margin={"5px"}>
+          <Box display={"flex"} gap={"5px"} margin={"5px"} justifyContent={"center"}>
             <Button
+              onClick={onHandleFirstSuggeestionApply}
               sx={{
                 width: "1px",
                 fontSize: "10px",
@@ -192,8 +268,9 @@ const FirstScenario = () => {
             </Tooltip>
           </Box>
 
-          <Box display={"flex"} gap={"5px"} margin={"5px"}>
+          <Box display={"flex"} gap={"5px"} margin={"5px"} justifyContent={"center"}>
             <Button
+              onClick={onHandleSecondSuggeestionApply}
               sx={{
                 width: "1px",
                 fontSize: "10px",
