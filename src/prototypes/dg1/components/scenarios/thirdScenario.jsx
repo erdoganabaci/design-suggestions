@@ -1,14 +1,35 @@
-import { Grid, Paper, Typography, IconButton, Tooltip, Box, Button } from "@mui/material"
+import {
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+  Tooltip,
+  Box,
+  Button,
+  Switch,
+  FormGroup,
+  FormControlLabel,
+} from "@mui/material"
 import InfoIcon from "@mui/icons-material/Info"
 import { canvasDroppedItemsAtom } from "../../store/droppedItems.atom"
 import { useAtom } from "jotai"
 import { displaySuggestionsAtom } from "../../store/displaySuggestions.atom"
+import { blue } from "@mui/material/colors"
 
 const firstScenarioSuggestions = [
   {
+    type: "text",
+    text: "Living Room Controller",
+    color: "#dde8fa",
+    id: "50vgyuj4r",
+    x: 297.5,
+    y: 33,
+  },
+  {
     type: "button",
     text: "TV",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "0z9y289c3",
     x: 338,
     y: 322,
@@ -16,7 +37,8 @@ const firstScenarioSuggestions = [
   {
     type: "button",
     text: "TV LIGHT",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "tmtqqasmi",
     x: 330,
     y: 132,
@@ -24,7 +46,8 @@ const firstScenarioSuggestions = [
   {
     type: "button",
     text: "CEILING LIGHT",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "qmxnfyqra",
     x: 307,
     y: 77,
@@ -35,7 +58,7 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "TV",
-    color: "#dde8fa",
+    color: "white",
     id: "0z9y289c3",
     x: 338,
     y: 322,
@@ -43,7 +66,7 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "CEILING LIGHT",
-    color: "#dde8fa",
+    color: "white",
     id: "qmxnfyqra",
     x: 307,
     y: 77,
@@ -51,14 +74,45 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "TV LIGHT",
-    color: "#dde8fa",
+    color: "white",
     id: "ruvrw27py",
     x: 318,
     y: 278,
   },
 ]
 
-const FirstScenario = () => {
+const SmartHomeSwitch = ({ label, checked, onChange }) => {
+  return (
+    <FormControlLabel
+      control={
+        <Switch
+          checked={checked}
+          onChange={onChange}
+          sx={{
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: blue[600],
+              "&:hover": {
+                backgroundColor: "rgba(25, 118, 210, 0.08)",
+              },
+            },
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: blue[600],
+            },
+          }}
+        />
+      }
+      label={
+        <Typography margin={0} fontSize={"12px"} variant="body2">
+          {label}
+        </Typography>
+      }
+      labelPlacement="start"
+      sx={{ justifyContent: "space-between", margin: "10px 0", width: "100%", marginLeft: "0" }}
+    />
+  )
+}
+
+const ThirdScenario = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
   const [displaySuggestions, setDisplaySuggestions] = useAtom(displaySuggestionsAtom)
 
@@ -66,9 +120,9 @@ const FirstScenario = () => {
     console.log("First suggestion applied")
     setCanvasDroppedItems(firstScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 1,
-      display: false,
-      isManual: true,
+      scenario: 4, // go to 4rd scenario
+      display: true,
+      // isManual: true,
     })
   }
 
@@ -76,9 +130,9 @@ const FirstScenario = () => {
     console.log("Second suggestion applied")
     setCanvasDroppedItems(secondScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 1,
-      display: false,
-      isManual: true,
+      scenario: 4,
+      display: true,
+      // isManual: true,
     })
   }
 
@@ -90,13 +144,18 @@ const FirstScenario = () => {
             Group buttons with similar functionality
           </Typography> */}
           <Box mb={1}>
+            <Typography fontSize={"12px"} variant="body2">
+              Living Room Controller
+            </Typography>
+          </Box>
+          <Box mb={1}>
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -109,10 +168,10 @@ const FirstScenario = () => {
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -125,10 +184,10 @@ const FirstScenario = () => {
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -141,7 +200,7 @@ const FirstScenario = () => {
             <Tooltip
               title={
                 <>
-                  Group buttons with similar functionality
+                  Consider adding a title to your application
                   <br />
                   <a
                     href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
@@ -198,62 +257,36 @@ const FirstScenario = () => {
 
       <Grid item key={1} sx={{ padding: "10px" }}>
         <Paper elevation={3} sx={{ padding: "2px" }}>
-          {/* <Typography variant="h6" gutterBottom>
-            Light1 Header
-          </Typography> */}
-          <Box mb={"30px"}>
-            <Button
-              sx={{
-                fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
-                ":hover": {
-                  backgroundColor: "#dde8fa",
-                },
-              }}
-              variant="contained"
-            >
-              Ceiling Light
-            </Button>
+          <Box mb={"-30px"}>
+            <SmartHomeSwitch label="Ceiling Light" checked={true} />
           </Box>
 
           <Box mb={1}>
-            <Button
-              sx={{
-                fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
-                ":hover": {
-                  backgroundColor: "#dde8fa",
-                },
-              }}
-              variant="contained"
-            >
-              Tv Light
-            </Button>
+            <SmartHomeSwitch label="Tv Light" checked={true} />
           </Box>
 
           <Box mb={1}>
-            <Button
+            {/* <Button
               sx={{
                 fontSize: "10px",
                 color: "black",
-                backgroundColor: "#dde8fa",
+                backgroundColor: "white",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "white",
                 },
               }}
               variant="contained"
             >
               Tv
-            </Button>
+            </Button> */}
+            <SmartHomeSwitch label="Tv" checked={true} />
           </Box>
 
           <Box display="flex" justifyContent="flex-end">
             <Tooltip
               title={
                 <>
-                  Group buttons with similar functionality
+                  Consider using toggle buttons
                   <br />
                   <a
                     href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
@@ -311,4 +344,4 @@ const FirstScenario = () => {
   )
 }
 
-export default FirstScenario
+export default ThirdScenario

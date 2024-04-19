@@ -56,10 +56,10 @@ const uniqueId = () => {
 
 const Canvas = () => {
   const dropRef = useRef(null)
-  const [droppedItems, setDroppedItems] = useState([])
   const [editingItem, setEditingItem] = useState(null) // To track the currently editing item
   const [editDialogOpen, setEditDialogOpen] = useState(false) // To track if the edit dialog is open
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
+  // const [droppedItems, setDroppedItems] = useState(canvasDroppedItems)
   const handleDrop = (item, monitor) => {
     if (!monitor) {
       console.log("Drop attempted without a monitor object")
@@ -96,7 +96,7 @@ const Canvas = () => {
         y: y,
       }
 
-      setDroppedItems([...droppedItems, newItem])
+      setCanvasDroppedItems([...canvasDroppedItems, newItem])
     }
   }
 
@@ -128,24 +128,25 @@ const Canvas = () => {
 
   // Handler to close the dialog and update the item in droppedItems
   const handleSaveDialog = () => {
+    console.log("onclose triggered")
     setEditDialogOpen(false)
     if (editingItem) {
-      const updatedItems = droppedItems.map((item) =>
+      const updatedItems = canvasDroppedItems.map((item) =>
         item.id === editingItem.id ? { ...item, text: editingItem.text, color: editingItem.color } : item,
       )
-      setDroppedItems(updatedItems)
+      setCanvasDroppedItems(updatedItems)
     }
     setEditingItem(null) // Reset the editing item
   }
 
   const handleRemoveItem = (itemId) => {
-    setDroppedItems(droppedItems.filter((item) => item.id !== itemId))
+    setCanvasDroppedItems(canvasDroppedItems.filter((item) => item.id !== itemId))
     setEditDialogOpen(false) // Close the dialog after removing the item
   }
 
-  useEffect(() => {
-    setCanvasDroppedItems(droppedItems)
-  }, [setCanvasDroppedItems, droppedItems])
+  // useEffect(() => {
+  //   setCanvasDroppedItems(droppedItems)
+  // }, [setCanvasDroppedItems, droppedItems])
 
   // Render a dropped item based on its type
   const renderDroppedItem = (item) => {
@@ -153,7 +154,11 @@ const Canvas = () => {
       case "button":
         return (
           <Box mt={1} onDoubleClick={() => handleDoubleClick(item)}>
-            <Button variant="contained" key={item.text} style={{ backgroundColor: item.color, color: "black" }}>
+            <Button
+              variant="contained"
+              key={item.text}
+              style={{ backgroundColor: item.color, color: item.textColor ? item.textColor : "black" }}
+            >
               {item.text}
             </Button>
           </Box>

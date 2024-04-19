@@ -6,6 +6,8 @@ import { useAtom } from "jotai"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import { displaySuggestionsAtom } from "../store/displaySuggestions.atom"
 import FirstScenario from "./scenarios/firstScenario"
+import SecondScenario from "./scenarios/secondScenario"
+import ThirdScenario from "./scenarios/thirdScenario"
 
 const DesignSuggestions = () => {
   // const [suggestions, setSuggestions] = useState([]) // Array to store your suggestions
@@ -29,14 +31,26 @@ const DesignSuggestions = () => {
   useEffect(() => {
     const containsAtLeastThreeDistinctButtons =
       canvasDroppedItems.filter((elem) => elem.type === "button" && elem.text !== "Button").length >= 3
+    const sameDarkColorSecondScenario =
+      canvasDroppedItems.filter((elem) => elem.type === "button" && elem.text !== "Button" && elem.color === "#004cc8")
+        .length >= 3
+    console.log("sameDarkColorSecondScenario", sameDarkColorSecondScenario)
     console.log("containsAtLeastThreeDistinctButtons", containsAtLeastThreeDistinctButtons)
-    if (containsAtLeastThreeDistinctButtons && !displaySuggestions.isManual) {
+    if (containsAtLeastThreeDistinctButtons && !displaySuggestions.isManual && displaySuggestions.scenario === 1) {
       setDisplaySuggestions({
+        scenario: 1,
         display: true,
         isManual: false,
       })
     }
-  }, [setDisplaySuggestions, canvasDroppedItems, displaySuggestions.isManual])
+    if (sameDarkColorSecondScenario && displaySuggestions.scenario === 1) {
+      setDisplaySuggestions({
+        scenario: 2,
+        display: true,
+        isManual: false,
+      })
+    }
+  }, [setDisplaySuggestions, canvasDroppedItems, displaySuggestions.isManual, displaySuggestions.scenario])
 
   // const generateSuggestions = () => {
   //   // Placeholder - Your logic to analyze canvas state and generate suggestions
@@ -76,32 +90,19 @@ const DesignSuggestions = () => {
       <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline" }}>
         Suggestions
       </Typography>
-      {displaySuggestions.display && (
+      {displaySuggestions.display && displaySuggestions.scenario === 1 && (
         <Grid container direction="column">
-          {/* {suggestions.map((suggestion, index) => (
-            <Grid item key={index} sx={{ padding: "16px" }}>
-              <Paper elevation={3}>
-                <Typography variant="h6" gutterBottom>
-                  Preview {index}
-                </Typography>
-                <Box mb={1}>
-                  <Button sx={{ width: "1px", fontSize: "10px" }} variant="contained">
-                    Button
-                  </Button>
-                </Box>
-                <img src={suggestion.image} alt={`Preview ${index}`} style={{ width: "100%", height: "50px" }} />
-                <Box display="flex" justifyContent="flex-end">
-                  <Tooltip title={suggestion.description} placement="right">
-                    <IconButton>
-                      <InfoIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Paper>
-            </Grid>
-          ))} */}
-
           <FirstScenario />
+        </Grid>
+      )}
+      {displaySuggestions.display && displaySuggestions.scenario === 2 && (
+        <Grid container direction="column">
+          <SecondScenario />
+        </Grid>
+      )}
+      {displaySuggestions.display && displaySuggestions.scenario === 3 && (
+        <Grid container direction="column">
+          <ThirdScenario />
         </Grid>
       )}
     </Box>

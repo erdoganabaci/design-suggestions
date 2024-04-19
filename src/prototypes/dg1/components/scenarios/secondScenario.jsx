@@ -8,7 +8,8 @@ const firstScenarioSuggestions = [
   {
     type: "button",
     text: "TV",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "0z9y289c3",
     x: 338,
     y: 322,
@@ -16,7 +17,8 @@ const firstScenarioSuggestions = [
   {
     type: "button",
     text: "TV LIGHT",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "tmtqqasmi",
     x: 330,
     y: 132,
@@ -24,7 +26,8 @@ const firstScenarioSuggestions = [
   {
     type: "button",
     text: "CEILING LIGHT",
-    color: "#dde8fa",
+    color: "#004cc8",
+    textColor: "white",
     id: "qmxnfyqra",
     x: 307,
     y: 77,
@@ -35,7 +38,7 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "TV",
-    color: "#dde8fa",
+    color: "white",
     id: "0z9y289c3",
     x: 338,
     y: 322,
@@ -43,7 +46,7 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "CEILING LIGHT",
-    color: "#dde8fa",
+    color: "white",
     id: "qmxnfyqra",
     x: 307,
     y: 77,
@@ -51,14 +54,14 @@ const secondScenarioSuggestions = [
   {
     type: "button",
     text: "TV LIGHT",
-    color: "#dde8fa",
+    color: "white",
     id: "ruvrw27py",
     x: 318,
     y: 278,
   },
 ]
 
-const FirstScenario = () => {
+const SecondScenario = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
   const [displaySuggestions, setDisplaySuggestions] = useAtom(displaySuggestionsAtom)
 
@@ -66,9 +69,9 @@ const FirstScenario = () => {
     console.log("First suggestion applied")
     setCanvasDroppedItems(firstScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 1,
-      display: false,
-      isManual: true,
+      scenario: 3, // go to 3rd scenario
+      display: true,
+      // isManual: true,
     })
   }
 
@@ -76,9 +79,9 @@ const FirstScenario = () => {
     console.log("Second suggestion applied")
     setCanvasDroppedItems(secondScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 1,
-      display: false,
-      isManual: true,
+      scenario: 3,
+      display: true,
+      // isManual: true,
     })
   }
 
@@ -93,10 +96,10 @@ const FirstScenario = () => {
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -109,10 +112,10 @@ const FirstScenario = () => {
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -125,10 +128,10 @@ const FirstScenario = () => {
             <Button
               sx={{
                 fontSize: "10px",
-                color: "black",
-                backgroundColor: "#dde8fa",
+                color: "white",
+                backgroundColor: "#004cc8",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "#004cc8",
                 },
               }}
               variant="contained"
@@ -141,7 +144,7 @@ const FirstScenario = () => {
             <Tooltip
               title={
                 <>
-                  Group buttons with similar functionality
+                  Use a lighter colour for your label when choosing a dark background
                   <br />
                   <a
                     href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
@@ -206,9 +209,9 @@ const FirstScenario = () => {
               sx={{
                 fontSize: "10px",
                 color: "black",
-                backgroundColor: "#dde8fa",
+                backgroundColor: "white",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "white",
                 },
               }}
               variant="contained"
@@ -222,9 +225,9 @@ const FirstScenario = () => {
               sx={{
                 fontSize: "10px",
                 color: "black",
-                backgroundColor: "#dde8fa",
+                backgroundColor: "white",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "white",
                 },
               }}
               variant="contained"
@@ -238,9 +241,9 @@ const FirstScenario = () => {
               sx={{
                 fontSize: "10px",
                 color: "black",
-                backgroundColor: "#dde8fa",
+                backgroundColor: "white",
                 ":hover": {
-                  backgroundColor: "#dde8fa",
+                  backgroundColor: "white",
                 },
               }}
               variant="contained"
@@ -253,7 +256,7 @@ const FirstScenario = () => {
             <Tooltip
               title={
                 <>
-                  Group buttons with similar functionality
+                  Use a lighter colour for the background with a dark colour for your label
                   <br />
                   <a
                     href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
@@ -311,4 +314,4 @@ const FirstScenario = () => {
   )
 }
 
-export default FirstScenario
+export default SecondScenario
