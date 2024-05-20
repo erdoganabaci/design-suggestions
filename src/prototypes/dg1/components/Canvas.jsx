@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles"
 import { useAtom } from "jotai"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import EditElementDialog from "./EditElementDialog"
+import SmartHomeSwitch from "./SmartHomeSwitch"
 // iPad-like styles
 const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
@@ -180,6 +181,9 @@ const Canvas = () => {
             onDoubleClick={() => handleDoubleClick(item)}
           />
         )
+      case "switch":
+        return <SmartHomeSwitch key={item.id} label={item.text ? item.text : item.icon} checked={item.checked} />
+
       default:
         return (
           <Typography key="unsupported" color="error">

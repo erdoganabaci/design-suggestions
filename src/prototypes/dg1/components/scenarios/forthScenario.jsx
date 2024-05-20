@@ -1,60 +1,14 @@
-import {
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  Tooltip,
-  Box,
-  Button,
-  Switch,
-  FormGroup,
-  FormControlLabel,
-} from "@mui/material"
+import { Grid, Paper, IconButton, Tooltip, Box, Button } from "@mui/material"
 import InfoIcon from "@mui/icons-material/Info"
 import { canvasDroppedItemsAtom } from "../../store/droppedItems.atom"
 import { useAtom } from "jotai"
 import { displaySuggestionsAtom } from "../../store/displaySuggestions.atom"
-import { blue } from "@mui/material/colors"
+import LightOutlinedIcon from "@mui/icons-material/LightOutlined"
+import LiveTvOutlinedIcon from "@mui/icons-material/LiveTvOutlined"
 import SmartHomeSwitch from "../SmartHomeSwitch"
-const firstScenarioSuggestions = [
-  {
-    type: "text",
-    text: "Living Room Controller",
-    color: "#dde8fa",
-    id: "50vgyuj4r",
-    x: 297.5,
-    y: 33,
-  },
-  {
-    type: "button",
-    text: "TV",
-    color: "#004cc8",
-    textColor: "white",
-    id: "0z9y289c3",
-    x: 338,
-    y: 322,
-  },
-  {
-    type: "button",
-    text: "TV LIGHT",
-    color: "#004cc8",
-    textColor: "white",
-    id: "tmtqqasmi",
-    x: 330,
-    y: 132,
-  },
-  {
-    type: "button",
-    text: "CEILING LIGHT",
-    color: "#004cc8",
-    textColor: "white",
-    id: "qmxnfyqra",
-    x: 307,
-    y: 77,
-  },
-]
+import WbIncandescentOutlinedIcon from "@mui/icons-material/WbIncandescentOutlined"
 
-const secondScenarioSuggestions = [
+const firstScenarioSuggestions = [
   {
     type: "text",
     text: "Living Room Controller",
@@ -89,7 +43,42 @@ const secondScenarioSuggestions = [
   },
 ]
 
-const ThirdScenario = () => {
+const secondScenarioSuggestions = [
+  {
+    type: "text",
+    text: "Living Room Controller",
+    color: "#dde8fa",
+    id: "50vgyuj4r",
+    x: 297.5,
+    y: 33,
+  },
+  {
+    type: "switch",
+    icon: <LiveTvOutlinedIcon />,
+    checked: true,
+    id: "0z9y282p3",
+    x: 338,
+    y: 322,
+  },
+  {
+    type: "switch",
+    icon: <WbIncandescentOutlinedIcon />,
+    checked: true,
+    id: "tmtqqasmi",
+    x: 330,
+    y: 132,
+  },
+  {
+    type: "switch",
+    icon: <LightOutlinedIcon />,
+    checked: true,
+    id: "omxnfyptx",
+    x: 330,
+    y: 77,
+  },
+]
+
+const ForthScenario = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
   const [displaySuggestions, setDisplaySuggestions] = useAtom(displaySuggestionsAtom)
 
@@ -97,7 +86,7 @@ const ThirdScenario = () => {
     console.log("First suggestion applied")
     setCanvasDroppedItems(firstScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 4, // go to 4rd scenario
+      scenario: 5, // go to 4rd scenario
       display: true,
       // isManual: true,
     })
@@ -107,7 +96,7 @@ const ThirdScenario = () => {
     console.log("Second suggestion applied")
     setCanvasDroppedItems(secondScenarioSuggestions)
     setDisplaySuggestions({
-      scenario: 4,
+      scenario: 5,
       display: true,
       // isManual: true,
     })
@@ -117,67 +106,36 @@ const ThirdScenario = () => {
     <>
       <Grid item key={1} sx={{ padding: "10px" }}>
         <Paper elevation={3} sx={{ padding: "2px" }}>
-          {/* <Typography fontSize={"10px"} gutterBottom>
-            Group buttons with similar functionality
-          </Typography> */}
-          <Box mb={1}>
-            <Typography fontSize={"12px"} variant="body2">
-              Living Room Controller
-            </Typography>
-          </Box>
-          <Box mb={1}>
-            <Button
-              sx={{
-                fontSize: "10px",
-                color: "white",
-                backgroundColor: "#004cc8",
-                ":hover": {
-                  backgroundColor: "#004cc8",
-                },
-              }}
-              variant="contained"
-            >
-              Ceiling Light
-            </Button>
-          </Box>
-
-          <Box mb={"30px"}>
-            <Button
-              sx={{
-                fontSize: "10px",
-                color: "white",
-                backgroundColor: "#004cc8",
-                ":hover": {
-                  backgroundColor: "#004cc8",
-                },
-              }}
-              variant="contained"
-            >
-              Tv Light
-            </Button>
+          <Box mb={"-30px"}>
+            <SmartHomeSwitch label="Ceiling Light" checked={true} />
           </Box>
 
           <Box mb={1}>
-            <Button
+            <SmartHomeSwitch label="Tv Light" checked={true} />
+          </Box>
+
+          <Box mb={1}>
+            {/* <Button
               sx={{
                 fontSize: "10px",
-                color: "white",
-                backgroundColor: "#004cc8",
+                color: "black",
+                backgroundColor: "white",
                 ":hover": {
-                  backgroundColor: "#004cc8",
+                  backgroundColor: "white",
                 },
               }}
               variant="contained"
             >
               Tv
-            </Button>
+            </Button> */}
+            <SmartHomeSwitch label="Tv" checked={true} />
           </Box>
 
           <Box display="flex" justifyContent="flex-end">
             <Tooltip
               title={
                 <>
-                  Consider adding a title to your application
+                  Consider using toggle buttons
                   <br />
                   <a
                     href="https://material.io/design/layout/spacing-methods.html#baseline-grids"
@@ -235,28 +193,14 @@ const ThirdScenario = () => {
       <Grid item key={1} sx={{ padding: "10px" }}>
         <Paper elevation={3} sx={{ padding: "2px" }}>
           <Box mb={"-30px"}>
-            <SmartHomeSwitch label="Ceiling Light" checked={true} />
+            <SmartHomeSwitch icon={<LightOutlinedIcon />} checked={true} />
           </Box>
 
           <Box mb={1}>
-            <SmartHomeSwitch label="Tv Light" checked={true} />
+            <SmartHomeSwitch icon={<WbIncandescentOutlinedIcon />} checked={true} />
           </Box>
-
           <Box mb={1}>
-            {/* <Button
-              sx={{
-                fontSize: "10px",
-                color: "black",
-                backgroundColor: "white",
-                ":hover": {
-                  backgroundColor: "white",
-                },
-              }}
-              variant="contained"
-            >
-              Tv
-            </Button> */}
-            <SmartHomeSwitch label="Tv" checked={true} />
+            <SmartHomeSwitch icon={<LiveTvOutlinedIcon />} checked={true} />
           </Box>
 
           <Box display="flex" justifyContent="flex-end">
@@ -321,4 +265,4 @@ const ThirdScenario = () => {
   )
 }
 
-export default ThirdScenario
+export default ForthScenario

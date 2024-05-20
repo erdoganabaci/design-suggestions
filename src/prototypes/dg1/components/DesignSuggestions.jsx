@@ -8,6 +8,7 @@ import { displaySuggestionsAtom } from "../store/displaySuggestions.atom"
 import FirstScenario from "./scenarios/firstScenario"
 import SecondScenario from "./scenarios/secondScenario"
 import ThirdScenario from "./scenarios/thirdScenario"
+import ForthScenario from "./scenarios/forthScenario"
 
 const DesignSuggestions = () => {
   // const [suggestions, setSuggestions] = useState([]) // Array to store your suggestions
@@ -105,8 +106,18 @@ const DesignSuggestions = () => {
           <ThirdScenario />
         </Grid>
       )}
+      {displaySuggestions.display && displaySuggestions.scenario === 4 && (
+        <Grid container direction="column">
+          <ForthScenario />
+        </Grid>
+      )}
     </Box>
   )
+  // return (
+  //   <Grid container direction="column">
+  //     <ForthScenario />
+  //   </Grid>
+  // )
 }
 
 export default DesignSuggestions
