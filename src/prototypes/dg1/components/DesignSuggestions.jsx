@@ -91,7 +91,7 @@ const DesignSuggestions = () => {
   return (
     <Box sx={{ overflowY: "auto", width: "100%" }}>
       <Typography variant="h6" gutterBottom sx={{ textDecoration: "underline" }}>
-        Suggestions
+        {displaySuggestions.scenario === 5 || displaySuggestions.scenario === 6 ? "Alternatives" : "Suggestions"}
       </Typography>
       {displaySuggestions.display && displaySuggestions.scenario === 1 && (
         <Grid container direction="column">

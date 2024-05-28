@@ -1,17 +1,14 @@
-import { useAtomValue } from "jotai"
 import React, { useState, useEffect } from "react"
 import { Box, IconButton, Typography, Alert, AlertTitle, Button } from "@mui/material"
 // import ChatIcon from "@mui/icons-material/Chat"
 import PersonIcon from "@mui/icons-material/Person"
 import CloseIcon from "@mui/icons-material/Close"
 import DesignSuggestions from "./DesignSuggestions"
-import { displaySuggestionsAtom } from "../store/displaySuggestions.atom"
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(true)
   const [suggestions, setSuggestions] = useState([])
-  const displaySuggestions = useAtomValue(displaySuggestionsAtom)
-  console.log("chatbot rendered", displaySuggestions)
+
   useEffect(() => {
     // Predefined rules or suggestions the chatbot would offer
     const predefinedSuggestions = [
