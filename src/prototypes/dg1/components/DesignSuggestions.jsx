@@ -9,6 +9,8 @@ import FirstScenario from "./scenarios/firstScenario"
 import SecondScenario from "./scenarios/secondScenario"
 import ThirdScenario from "./scenarios/thirdScenario"
 import ForthScenario from "./scenarios/forthScenario"
+import FifthScenario from "./scenarios/fifthScenario"
+import SixthScenario from "./scenarios/sixthScenario"
 
 const DesignSuggestions = () => {
   // const [suggestions, setSuggestions] = useState([]) // Array to store your suggestions
@@ -111,13 +113,18 @@ const DesignSuggestions = () => {
           <ForthScenario />
         </Grid>
       )}
+      {displaySuggestions.display && displaySuggestions.scenario === 5 && (
+        <Grid container direction="column">
+          <FifthScenario />
+        </Grid>
+      )}
+      {displaySuggestions.display && displaySuggestions.scenario === 6 && (
+        <Grid container direction="column">
+          <SixthScenario />
+        </Grid>
+      )}
     </Box>
   )
-  // return (
-  //   <Grid container direction="column">
-  //     <ForthScenario />
-  //   </Grid>
-  // )
 }
 
 export default DesignSuggestions
