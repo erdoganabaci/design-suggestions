@@ -2,6 +2,7 @@ import { Grid, Typography, Button } from "@mui/material"
 import Canvas from "./components/Canvas"
 import DesignSuggestions from "./components/DesignSuggestions"
 import Sidebar from "./components/Sidebar"
+import Chatbot from "./components/Chatbot"
 
 const DG1Prototype = () => {
   return (
@@ -42,6 +43,9 @@ const DG1Prototype = () => {
       <Grid item xs={4} xl={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Canvas />
       </Grid>
+      {/* <Grid item xs={2} xl={2} style={{ paddingTop: 0 }}>
+        <Chatbot />
+      </Grid> */}
       <Grid item xs={2} xl={2} sx={{ border: "1px solid black" }} style={{ paddingTop: 0 }}>
         <DesignSuggestions />
       </Grid>
