@@ -132,16 +132,38 @@ const DynamicSuggestions = () => {
     setCanvasDroppedItems(suggestionSet)
     // setCanvasDroppedItems((prevItems) => [...prevItems, ...suggestionSet])
     // after applied remove the old value
-    setSuggestions((prevSuggestions) =>
-      prevSuggestions.map((set) =>
-        set.filter((item) => !suggestionSet.some((appliedItem) => appliedItem.id === item.id)),
-      ),
-    )
+    // setSuggestions((prevSuggestions) =>
+    //   prevSuggestions.map((set) =>
+    //     set.filter((item) => !suggestionSet.some((appliedItem) => appliedItem.id === item.id)),
+    //   ),
+    // )
 
     // setDisplaySuggestions({
     //   display: false,
     //   isManual: true,
     // });
+  }
+
+  const displaySuggestedItems = (suggestionItem) => {
+    if (suggestionItem.type === "button") {
+      return (
+        <Button
+          key={suggestionItem.id}
+          sx={{
+            fontSize: "10px",
+            color: suggestionItem.textColor,
+            backgroundColor: suggestionItem.color,
+            margin: "5px 0",
+            ":hover": {
+              backgroundColor: suggestionItem.color,
+            },
+          }}
+          variant="contained"
+        >
+          {suggestionItem.text}
+        </Button>
+      )
+    }
   }
 
   return (
@@ -158,8 +180,11 @@ const DynamicSuggestions = () => {
                     <Typography variant="h6" gutterBottom>
                       Preview {index + 1}:
                     </Typography>
-                    <Box>
-                      {canvasDroppedItems.map((item) => (
+                    <Box sx={{ display: "flex", flexDirection: "column", margin: 1 }}>
+                      {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
+
+                      {/* {displaySuggestedItems(suggestions)} */}
+                      {/* {canvasDroppedItems.map((item) => (
                         <Button
                           key={item.id}
                           sx={{
@@ -192,7 +217,7 @@ const DynamicSuggestions = () => {
                         >
                           {suggestion.text}
                         </Button>
-                      ))}
+                      ))} */}
                     </Box>
                   </Box>
 
