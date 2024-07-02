@@ -5,7 +5,7 @@ import Sidebar from "./components/Sidebar"
 import Chatbot from "./components/Chatbot"
 import DialogRectangleBox from "./components/DialogRectangleBox"
 
-const DG1Prototype = () => {
+const Implementation = () => {
   return (
     <Grid
       container
@@ -43,9 +43,9 @@ const DG1Prototype = () => {
       </Grid>
       <Grid item xs={4} xl={4} display={"flex"} flexDirection={"column"} alignItems={"center"}>
         <Canvas />
-        <Grid item xs={2} xl={2} style={{ paddingTop: 0 }}>
+        {/* <Grid item xs={2} xl={2} style={{ paddingTop: 0 }}>
           <DialogRectangleBox />
-        </Grid>
+        </Grid> */}
       </Grid>
       {/* <Grid item xs={2} xl={2} style={{ paddingTop: 0 }}>
         <Chatbot />
@@ -58,4 +58,4 @@ const DG1Prototype = () => {
   )
 }
 
-export default DG1Prototype
+export default Implementation
