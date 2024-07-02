@@ -32,50 +32,30 @@ const lightenColor = (color, percent) => {
       .slice(1)
   )
 }
-
-// const generateSuggestions = (droppedItems) => {
-//   const suggestions = []
-//   //   1- text color to white ,background keep the same (dark), if you see dark text and dark background then suggested
-//   //   2- keep the text color, propose depending on color. Background changes to lighter version.
-//   const suggestion1 = droppedItems
-//     .map((item) => {
-//       if (isColorDark(item.textColor)) {
-//         return {
-//           ...item,
-//           text: `${item.text}`,
-//           textColor: "white",
-//           suggestion: "(Suggestion: Change text color to white)",
-//           suggestionLink: "https://material.io/design/color/the-color-system.html",
-//         }
-//       }
-//       return undefined
-//     })
-//     .filter((item) => item !== undefined) // Filter out undefined values
-
-//   const suggestion2 = droppedItems
-//     .map((item) => {
-//       if (isColorDark(item.color)) {
-//         return {
-//           ...item,
-//           text: `${item.text}`,
-//           color: lightenColor(item.color, 40),
-//           suggestion: "(Suggestion: Lighten background color)",
-//           suggestionLink: "https://material.io/design/color/color-usage.html",
-//         }
-//       }
-//       return undefined
-//     })
-//     .filter((item) => item !== undefined) // Filter out undefined values
-
-//   suggestions.push(suggestion1, suggestion2)
 //   return suggestions
 // }
 
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
+  // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
+  const hasTitleText = droppedItems.some((item) => item.type === "text" && item.y > 7 && item.y < 116)
+  const suggestion1 = !hasTitleText
+    ? [
+        {
+          type: "text",
+          text: "Title of page",
+          color: "#dde8fa",
+          textColor: "black",
+          id: "0ivbii7gm",
+          x: 350,
+          y: 23,
+        },
+        ...droppedItems,
+      ]
+    : []
 
-  // Suggestion 1: Change text color to white if both text color and background are dark
-  const suggestion1 = droppedItems.some((item) => isColorDark(item.textColor) && isColorDark(item.color))
+  // Suggestion 2: Change text color to white if both text color and background are dark
+  const suggestion2 = droppedItems.some((item) => isColorDark(item.textColor) && isColorDark(item.color))
     ? droppedItems.map((item) =>
         isColorDark(item.textColor) && isColorDark(item.color)
           ? {
@@ -86,8 +66,8 @@ const generateSuggestions = (droppedItems) => {
       )
     : []
 
-  // Suggestion 2: Lighten background color if background is dark
-  const suggestion2 = droppedItems.some((item) => isColorDark(item.color) && !isColorDark(item.textColor))
+  // Suggestion 3: Lighten background color if background is dark
+  const suggestion3 = droppedItems.some((item) => isColorDark(item.color) && !isColorDark(item.textColor))
     ? droppedItems.map((item) =>
         isColorDark(item.color) && !isColorDark(item.textColor)
           ? {
@@ -101,14 +81,22 @@ const generateSuggestions = (droppedItems) => {
   if (suggestion1.length > 0) {
     suggestions.push({
       items: suggestion1,
-      suggestion: "Change text color to white",
-      suggestionLink: "https://material.io/design/color/the-color-system.html",
+      suggestion: "Add title text item",
+      suggestionLink: "https://material.io/design/typography/the-type-system.html",
     })
   }
 
   if (suggestion2.length > 0) {
     suggestions.push({
       items: suggestion2,
+      suggestion: "Change text color to white",
+      suggestionLink: "https://material.io/design/color/the-color-system.html",
+    })
+  }
+
+  if (suggestion3.length > 0) {
+    suggestions.push({
+      items: suggestion3,
       suggestion: "Lighten background color",
       suggestionLink: "https://material.io/design/color/color-usage.html",
     })
@@ -145,7 +133,24 @@ const DynamicSuggestions = () => {
   }
 
   const displaySuggestedItems = (suggestionItem) => {
-    if (suggestionItem.type === "button") {
+    if (suggestionItem.type === "text") {
+      return (
+        <Typography
+          key={suggestionItem.id}
+          sx={{
+            fontSize: "10px",
+            color: suggestionItem.textColor,
+            // backgroundColor: suggestionItem.color,
+            margin: "5px 0",
+            ":hover": {
+              backgroundColor: suggestionItem.color,
+            },
+          }}
+        >
+          {suggestionItem.text}
+        </Typography>
+      )
+    } else if (suggestionItem.type === "button") {
       return (
         <Button
           key={suggestionItem.id}
@@ -153,7 +158,8 @@ const DynamicSuggestions = () => {
             fontSize: "10px",
             color: suggestionItem.textColor,
             backgroundColor: suggestionItem.color,
-            margin: "5px 0",
+            marginLeft: "50px",
+            width: "30px",
             ":hover": {
               backgroundColor: suggestionItem.color,
             },
@@ -174,13 +180,13 @@ const DynamicSuggestions = () => {
             suggestionSet &&
             suggestionSet.items &&
             suggestionSet.items.length > 0 && (
-              <Grid item key={index} sx={{ padding: "10px" }}>
+              <Grid item key={index} sx={{ padding: "10px", width: "100%" }}>
                 <Paper elevation={3} sx={{ padding: "2px" }}>
                   <Box mb={1}>
                     <Typography variant="h6" gutterBottom>
                       Preview {index + 1}:
                     </Typography>
-                    <Box sx={{ display: "flex", flexDirection: "column", margin: 1 }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", margin: 1, rowGap: 1.5 }}>
                       {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
 
                       {/* {displaySuggestedItems(suggestions)} */}
