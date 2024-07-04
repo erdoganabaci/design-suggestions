@@ -158,7 +158,7 @@ const DynamicSuggestions = () => {
             fontSize: "10px",
             color: suggestionItem.textColor,
             backgroundColor: suggestionItem.color,
-            marginLeft: "50px",
+            marginLeft: "70px",
             width: "30px",
             ":hover": {
               backgroundColor: suggestionItem.color,
@@ -186,7 +186,15 @@ const DynamicSuggestions = () => {
                     <Typography variant="h6" gutterBottom>
                       Preview {index + 1}:
                     </Typography>
-                    <Box sx={{ display: "flex", flexDirection: "column", margin: 1, rowGap: 1.5 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        margin: 1,
+                        rowGap: 1.5,
+                        justifyContent: "center",
+                      }}
+                    >
                       {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
 
                       {/* {displaySuggestedItems(suggestions)} */}
