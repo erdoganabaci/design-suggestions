@@ -1,6 +1,6 @@
 import React from "react"
 import { List, ListItem, ListItemText, Button } from "@mui/material"
-import DraggableElement from "./DraggableElement" // Import other drag/drop components as needed
+import DraggableElement from "./DraggableElementSidebar" // Import other drag/drop components as needed
 
 const Sidebar = () => {
   const elements = [

@@ -1,21 +1,19 @@
-import { useState, useRef, useEffect } from "react"
-import { Paper } from "@mui/material"
-import { useDrop } from "react-dnd"
-import { Button, Typography, Box } from "@mui/material" // Import other MUI components as needed
+import { useState, useRef } from "react"
+import { Paper, Typography, Box } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import { useDrop } from "react-dnd"
 import { useAtom } from "jotai"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import EditElementDialog from "./EditElementDialog"
-import SmartHomeSwitch from "./SmartHomeSwitch"
-// iPad-like styles
+import DraggableElementCanvas from "./DraggableElementCanvas"
+
 const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
   padding: "20px 24px 15px",
   borderRadius: "40px",
   minWidth: "768px",
   [theme.breakpoints.down("md")]: {
-    // Adjust for screens smaller than 1200px
-    minWidth: "300px", // Set minimum width to 300px for smaller screens
+    minWidth: "300px",
   },
   height: "85vh",
   boxSizing: "content-box",
@@ -33,10 +31,8 @@ const Screen = styled("div")(({ theme }) => ({
   height: "75vh",
   minWidth: "768px",
   [theme.breakpoints.down("md")]: {
-    // Adjust for screens smaller than 1200px
-    minWidth: "300px", // Set minimum width to 300px for smaller screens
+    minWidth: "300px",
   },
-  // width: "100%",
   border: "1px solid #000000",
   backgroundColor: "#000",
   overflow: "hidden",
@@ -57,10 +53,10 @@ const uniqueId = () => {
 
 const Canvas = () => {
   const dropRef = useRef(null)
-  const [editingItem, setEditingItem] = useState(null) // To track the currently editing item
-  const [editDialogOpen, setEditDialogOpen] = useState(false) // To track if the edit dialog is open
+  const [editingItem, setEditingItem] = useState(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
-  // const [droppedItems, setDroppedItems] = useState(canvasDroppedItems)
+
   const handleDrop = (item, monitor) => {
     if (!monitor) {
       console.log("Drop attempted without a monitor object")
@@ -68,8 +64,6 @@ const Canvas = () => {
     }
 
     const didDrop = monitor.didDrop()
-    console.log("Item didDrop", didDrop)
-
     if (didDrop) {
       console.log("Item already dropped")
       return
@@ -77,65 +71,71 @@ const Canvas = () => {
 
     const clientOffset = monitor.getClientOffset()
     const componentRect = dropRef.current.getBoundingClientRect()
-
     if (clientOffset) {
-      // Convert the drop coordinates to be relative to the canvas
       const x = clientOffset.x - componentRect.left
       const y = clientOffset.y - componentRect.top
 
-      console.log("Dropping item at:", x, y)
+      // Check if the item already exists in the canvasDroppedItems
+      const existingItemIndex = canvasDroppedItems.findIndex((droppedItem) => droppedItem.id === item.id)
 
-      // Generate a unique ID for the new item
-      const newItemId = uniqueId()
-      console.log("here item from canvas", item)
-
-      // Create the new item with its properties and add it to the droppedItems array
-      const newItem = {
-        ...item,
-        color: "#dde8fa",
-        textColor: "black",
-        id: newItemId, // Assign a unique ID to the new item
-        x: x,
-        y: y,
+      if (existingItemIndex !== -1) {
+        // Update the position of the existing item
+        const updatedItems = [...canvasDroppedItems]
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],
+          x,
+          y,
+        }
+        setCanvasDroppedItems(updatedItems)
+      } else {
+        // Add the new item with its properties and unique ID
+        const newItemId = uniqueId()
+        const newItem = {
+          ...item,
+          color: "#dde8fa",
+          textColor: "black",
+          id: newItemId,
+          x,
+          y,
+        }
+        setCanvasDroppedItems([...canvasDroppedItems, newItem])
       }
-
-      setCanvasDroppedItems([...canvasDroppedItems, newItem])
     }
   }
 
+  const handleItemDrop = (id, x, y) => {
+    const updatedItems = canvasDroppedItems.map((item) => (item.id === id ? { ...item, x, y } : item))
+    setCanvasDroppedItems(updatedItems)
+  }
+
   const [{ isOver }, drop] = useDrop({
-    accept: ["button", "text", "image"], // Update accepted types if needed
+    accept: ["button", "text", "image", "switch"],
     drop: (item, monitor) => handleDrop(item, monitor),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   })
 
-  drop(dropRef) // Attach the drop ref here
+  drop(dropRef)
 
-  // Handler to open dialog for editing
   const handleDoubleClick = (item) => {
     setEditingItem(item)
     setEditDialogOpen(true)
   }
 
-  // Handler to update text
   const handleTextChange = (newText) => {
     setEditingItem({ ...editingItem, text: newText })
   }
 
-  // Handler to update color (for buttons)
   const handleColorChange = (newColor) => {
     setEditingItem({ ...editingItem, color: newColor })
   }
-  // Handler to update text color (for buttons)
+
   const handleTextColorChange = (newColor) => {
     setEditingItem({ ...editingItem, textColor: newColor })
   }
 
-  // Handler to close the dialog and update the item in droppedItems
   const handleSaveDialog = () => {
-    console.log("onclose triggered")
     setEditDialogOpen(false)
     if (editingItem) {
       const updatedItems = canvasDroppedItems.map((item) =>
@@ -145,63 +145,13 @@ const Canvas = () => {
       )
       setCanvasDroppedItems(updatedItems)
     }
-    setEditingItem(null) // Reset the editing item
+    setEditingItem(null)
   }
 
   const handleRemoveItem = (itemId) => {
     setCanvasDroppedItems(canvasDroppedItems.filter((item) => item.id !== itemId))
-    setEditDialogOpen(false) // Close the dialog after removing the item
+    setEditDialogOpen(false)
   }
-
-  // useEffect(() => {
-  //   setCanvasDroppedItems(droppedItems)
-  // }, [setCanvasDroppedItems, droppedItems])
-
-  // Render a dropped item based on its type
-  const renderDroppedItem = (item) => {
-    switch (item.type) {
-      case "button":
-        return (
-          <Box mt={1} onDoubleClick={() => handleDoubleClick(item)}>
-            <Button
-              variant="contained"
-              key={item.text}
-              style={{ backgroundColor: item.color, color: item.textColor ? item.textColor : "black" }}
-            >
-              {item.text}
-            </Button>
-          </Box>
-        )
-      case "text":
-        return (
-          <Typography key={item.text} variant="body1" onDoubleClick={() => handleDoubleClick(item)}>
-            {item.text}
-          </Typography>
-        )
-      case "image":
-        return (
-          <Box
-            key={item.src}
-            component="img"
-            src={item.src}
-            alt={item.alt}
-            sx={{ width: "100px", height: "100px", marginTop: 1 }}
-            onDoubleClick={() => handleDoubleClick(item)}
-          />
-        )
-      case "switch":
-        return <SmartHomeSwitch key={item.id} label={item.text ? item.text : item.icon} checked={item.checked} />
-
-      default:
-        return (
-          <Typography key="unsupported" color="error">
-            Unsupported element type
-          </Typography>
-        ) // More visible feedback
-    }
-  }
-
-  // console.log("droppedItems", droppedItems)
 
   return (
     <>
@@ -213,18 +163,21 @@ const Canvas = () => {
         <Screen id={"screen"}>
           <Paper ref={dropRef} elevation={0} sx={{ height: "100%", bgcolor: "white" }}>
             <Box sx={{ position: "relative" }}>
-              {canvasDroppedItems.map((item, index) => (
-                <div
-                  key={index}
-                  style={{
-                    position: "absolute",
-                    left: `${item.x}px`,
-                    top: `${item.y}px`,
-                    // any other styling for positioning
-                  }}
-                >
-                  {renderDroppedItem(item)}
-                </div>
+              {canvasDroppedItems.map((item) => (
+                <DraggableElementCanvas
+                  key={item.id}
+                  type={item.type}
+                  text={item.text}
+                  src={item.src}
+                  alt={item.alt}
+                  color={item.color}
+                  textColor={item.textColor}
+                  id={item.id}
+                  x={item.x}
+                  y={item.y}
+                  checked={item.checked}
+                  onDoubleClick={() => handleDoubleClick(item)}
+                />
               ))}
             </Box>
           </Paper>
