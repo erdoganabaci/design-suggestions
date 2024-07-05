@@ -5,7 +5,7 @@ import { useDrop } from "react-dnd"
 import { useAtom } from "jotai"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import EditElementDialog from "./EditElementDialog"
-import DraggableElementCanvas from "./DraggableElementCanvas"
+import DraggableResizableElement from "./DraggableResizableElement" // Import DraggableResizableElement
 
 const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
@@ -71,6 +71,7 @@ const Canvas = () => {
 
     const clientOffset = monitor.getClientOffset()
     const componentRect = dropRef.current.getBoundingClientRect()
+
     if (clientOffset) {
       const x = clientOffset.x - componentRect.left
       const y = clientOffset.y - componentRect.top
@@ -97,6 +98,8 @@ const Canvas = () => {
           id: newItemId,
           x,
           y,
+          width: 91, // default width
+          height: 36, // default height
         }
         setCanvasDroppedItems([...canvasDroppedItems, newItem])
       }
@@ -105,6 +108,11 @@ const Canvas = () => {
 
   const handleItemDrop = (id, x, y) => {
     const updatedItems = canvasDroppedItems.map((item) => (item.id === id ? { ...item, x, y } : item))
+    setCanvasDroppedItems(updatedItems)
+  }
+
+  const handleItemResize = (id, width, height) => {
+    const updatedItems = canvasDroppedItems.map((item) => (item.id === id ? { ...item, width, height } : item))
     setCanvasDroppedItems(updatedItems)
   }
 
@@ -164,7 +172,7 @@ const Canvas = () => {
           <Paper ref={dropRef} elevation={0} sx={{ height: "100%", bgcolor: "white" }}>
             <Box sx={{ position: "relative" }}>
               {canvasDroppedItems.map((item) => (
-                <DraggableElementCanvas
+                <DraggableResizableElement
                   key={item.id}
                   type={item.type}
                   text={item.text}
@@ -175,8 +183,12 @@ const Canvas = () => {
                   id={item.id}
                   x={item.x}
                   y={item.y}
+                  width={item.width}
+                  height={item.height}
                   checked={item.checked}
                   onDoubleClick={() => handleDoubleClick(item)}
+                  onResizeStop={handleItemResize}
+                  onDragStop={handleItemDrop}
                 />
               ))}
             </Box>

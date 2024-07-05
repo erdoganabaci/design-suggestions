@@ -32,8 +32,30 @@ const lightenColor = (color, percent) => {
       .slice(1)
   )
 }
-//   return suggestions
-// }
+
+const generateSizeSuggestions = (droppedItems) => {
+  const maxSize = 100 // Define the maximum acceptable size
+  const suggestions = []
+  droppedItems.forEach((item) => {
+    if (item.width > maxSize || item.height > maxSize) {
+      suggestions.push({
+        ...item,
+        width: Math.min(item.width, maxSize),
+        height: Math.min(item.height, maxSize),
+      })
+    }
+  })
+
+  return suggestions.length > 0
+    ? [
+        {
+          items: suggestions,
+          suggestion: "Some elements are too large. Consider reducing their size.",
+          suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
+        },
+      ]
+    : []
+}
 
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
@@ -102,6 +124,13 @@ const generateSuggestions = (droppedItems) => {
     })
   }
 
+  // Suggestion 4: Suggest resizing elements that are too large
+  const sizeSuggestions = generateSizeSuggestions(droppedItems)
+
+  if (sizeSuggestions.length > 0) {
+    suggestions.push(...sizeSuggestions)
+  }
+
   return suggestions
 }
 
@@ -118,18 +147,6 @@ const DynamicSuggestions = () => {
   const onHandleSuggestionApply = (suggestionSet) => {
     console.log("Suggestion applied", suggestionSet)
     setCanvasDroppedItems(suggestionSet)
-    // setCanvasDroppedItems((prevItems) => [...prevItems, ...suggestionSet])
-    // after applied remove the old value
-    // setSuggestions((prevSuggestions) =>
-    //   prevSuggestions.map((set) =>
-    //     set.filter((item) => !suggestionSet.some((appliedItem) => appliedItem.id === item.id)),
-    //   ),
-    // )
-
-    // setDisplaySuggestions({
-    //   display: false,
-    //   isManual: true,
-    // });
   }
 
   const displaySuggestedItems = (suggestionItem) => {
@@ -158,8 +175,7 @@ const DynamicSuggestions = () => {
             fontSize: "10px",
             color: suggestionItem.textColor,
             backgroundColor: suggestionItem.color,
-            marginLeft: "70px",
-            width: "30px",
+            width: "60px",
             ":hover": {
               backgroundColor: suggestionItem.color,
             },
@@ -168,6 +184,16 @@ const DynamicSuggestions = () => {
         >
           {suggestionItem.text}
         </Button>
+      )
+    } else if (suggestionItem.type === "image") {
+      return (
+        <Box
+          key={suggestionItem.id}
+          component="img"
+          src={suggestionItem.src}
+          alt={suggestionItem.alt}
+          sx={{ width: "80%", height: "80%" }}
+        />
       )
     }
   }
@@ -193,6 +219,7 @@ const DynamicSuggestions = () => {
                         margin: 1,
                         rowGap: 1.5,
                         justifyContent: "center",
+                        alignItems: "center",
                       }}
                     >
                       {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
