@@ -74,6 +74,76 @@ const generateSizeSuggestions = (droppedItems) => {
   return []
 }
 
+const generateFontSizeSuggestions = (droppedItems) => {
+  const minFontSize = 12
+  const maxFontSize = 36
+  const suggestedFontSize = 14 // Placeholder for
+  const fontSizeSuggestions = []
+  const updatedItems = []
+
+  droppedItems.forEach((item) => {
+    if (item.type === "text" && item.fontSize) {
+      if (item.fontSize < minFontSize) {
+        fontSizeSuggestions.push({
+          ...item,
+          fontSize: minFontSize,
+        })
+      } else if (item.fontSize > maxFontSize) {
+        fontSizeSuggestions.push({
+          ...item,
+          fontSize: maxFontSize,
+        })
+      } else {
+        updatedItems.push(item)
+      }
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (fontSizeSuggestions.length > 0) {
+    const oversizedItems = fontSizeSuggestions.filter((item) => item.fontSize >= maxFontSize)
+    const undersizedItems = fontSizeSuggestions.filter((item) => item.fontSize <= minFontSize)
+
+    const oversizedElementList = oversizedItems
+      .map((item) => item.type + " " + (item.text || item.alt || item.id))
+      .join(", ")
+    const undersizedElementList = undersizedItems
+      .map((item) => item.type + " " + (item.text || item.alt || item.id))
+      .join(", ")
+
+    const suggestions = []
+
+    if (oversizedItems.length > 0) {
+      const suggestedOversizedItems = oversizedItems.map((item) => ({
+        ...item,
+        fontSize: suggestedFontSize,
+      }))
+      suggestions.push({
+        items: [...updatedItems, ...suggestedOversizedItems],
+        suggestion: `The following elements have a font size that is too large: ${oversizedElementList}. Consider reducing their font size to ${maxFontSize}px.`,
+        suggestionLink: "https://material.io/design/typography/the-type-system.html",
+      })
+    }
+
+    if (undersizedItems.length > 0) {
+      const suggestedUndersizedItems = undersizedItems.map((item) => ({
+        ...item,
+        fontSize: suggestedFontSize,
+      }))
+      suggestions.push({
+        items: [...updatedItems, ...suggestedUndersizedItems],
+        suggestion: `The following elements have a font size that is too small: ${undersizedElementList}. Consider increasing their font size to ${minFontSize}px.`,
+        suggestionLink: "https://material.io/design/typography/the-type-system.html",
+      })
+    }
+
+    return suggestions
+  }
+
+  return []
+}
+
 // const resolveOverlaps = (droppedItems) => {
 //   const spacing = 10 // Define the minimum spacing between elements
 //   const suggestions = [...droppedItems]
@@ -136,6 +206,7 @@ const generateSuggestions = (droppedItems) => {
           id: "0ivbii7gm",
           x: 350,
           y: 23,
+          fontSize: 14,
         },
         ...droppedItems,
       ]
@@ -194,6 +265,12 @@ const generateSuggestions = (droppedItems) => {
 
   if (sizeSuggestions.length > 0) {
     suggestions.push(...sizeSuggestions)
+  }
+
+  // Suggestion 5: Suggest increasing font size for better readability
+  const fontSizeSuggestions = generateFontSizeSuggestions(droppedItems)
+  if (fontSizeSuggestions.length > 0) {
+    suggestions.push(...fontSizeSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps

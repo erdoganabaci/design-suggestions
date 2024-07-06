@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Input } from "@mui/material" // Import other MUI components as needed
+import { Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Input } from "@mui/material"
 
 const EditElementDialog = ({
   open,
@@ -10,9 +10,11 @@ const EditElementDialog = ({
   onTextColorChange,
   onRemove,
   onFileChange,
+  onFontSizeChange,
 }) => {
   const isButton = element?.type === "button"
   const isImage = element?.type === "image"
+  const isText = element?.type === "text"
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -59,6 +61,17 @@ const EditElementDialog = ({
             variant="outlined"
             value={element?.textColor}
             onChange={(e) => onTextColorChange(e.target.value)}
+          />
+        )}
+        {isText && (
+          <TextField
+            type="number"
+            margin="dense"
+            label="Font Size"
+            fullWidth
+            variant="outlined"
+            value={element?.fontSize}
+            onChange={(e) => onFontSizeChange(e.target.value)}
           />
         )}
         {isImage && <Input type="file" margin="dense" fullWidth variant="outlined" onChange={handleFileChange} />}

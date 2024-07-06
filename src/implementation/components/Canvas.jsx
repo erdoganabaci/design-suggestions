@@ -100,6 +100,7 @@ const Canvas = () => {
           y,
           width: 91, // default width
           height: 36, // default height
+          fontSize: item.type === "text" ? 14 : undefined, // default font size for text
         }
         setCanvasDroppedItems([...canvasDroppedItems, newItem])
       }
@@ -147,6 +148,10 @@ const Canvas = () => {
     setEditingItem({ ...editingItem, src: newSrc })
   }
 
+  const handleFontSizeChange = (newFontSize) => {
+    setEditingItem({ ...editingItem, fontSize: newFontSize })
+  }
+
   const handleSaveDialog = () => {
     setEditDialogOpen(false)
     if (editingItem) {
@@ -158,6 +163,7 @@ const Canvas = () => {
               color: editingItem.color,
               textColor: editingItem.textColor,
               src: editingItem.src,
+              fontSize: editingItem.fontSize,
             }
           : item,
       )
@@ -195,6 +201,7 @@ const Canvas = () => {
                   y={item.y}
                   width={item.width}
                   height={item.height}
+                  fontSize={item.fontSize}
                   checked={item.checked}
                   onDoubleClick={() => handleDoubleClick(item)}
                   onResizeStop={handleItemResize}
@@ -215,6 +222,7 @@ const Canvas = () => {
         onColorChange={handleColorChange}
         onTextColorChange={handleTextColorChange}
         onFileChange={handleFileChange}
+        onFontSizeChange={handleFontSizeChange}
         onRemove={handleRemoveItem}
       />
     </>

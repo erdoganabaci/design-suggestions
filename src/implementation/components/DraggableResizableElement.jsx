@@ -21,6 +21,7 @@ const DraggableResizableElement = ({
   onDoubleClick,
   onResizeStop,
   onDragStop,
+  fontSize,
 }) => {
   const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type,
@@ -44,7 +45,7 @@ const DraggableResizableElement = ({
         )
       case "text":
         return (
-          <Typography variant="body1" style={{ width: "100%", height: "100%" }}>
+          <Typography variant="body1" style={{ width: "100%", height: "100%", fontSize: fontSize + "px" }}>
             {text}
           </Typography>
         )
