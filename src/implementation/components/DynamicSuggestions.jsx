@@ -34,28 +34,93 @@ const lightenColor = (color, percent) => {
 }
 
 const generateSizeSuggestions = (droppedItems) => {
-  const maxSize = 100 // Define the maximum acceptable size
+  const maxSizes = {
+    button: { width: 200, height: 50 },
+    text: { width: 300, height: 100 },
+    image: { width: 400, height: 300 },
+  }
+
   const suggestions = []
+  const updatedItems = []
+  const oversizedElements = []
+
   droppedItems.forEach((item) => {
-    if (item.width > maxSize || item.height > maxSize) {
+    const maxSize = maxSizes[item.type] || { width: 100, height: 100 }
+
+    if (item.width > maxSize.width || item.height > maxSize.height) {
       suggestions.push({
         ...item,
-        width: Math.min(item.width, maxSize),
-        height: Math.min(item.height, maxSize),
+        width: Math.min(item.width, maxSize.width),
+        height: Math.min(item.height, maxSize.height),
       })
+
+      oversizedElements.push(item.type)
+    } else {
+      updatedItems.push(item)
     }
   })
 
-  return suggestions.length > 0
-    ? [
-        {
-          items: suggestions,
-          suggestion: "Some elements are too large. Consider reducing their size.",
-          suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
-        },
-      ]
-    : []
+  if (suggestions.length > 0) {
+    const elementList = oversizedElements.join(", ")
+    return [
+      {
+        items: [...updatedItems, ...suggestions],
+        suggestion: `The following elements are too large: ${elementList}. Consider reducing their size.`,
+        suggestionLink: "https://material.io/design/layout/understanding-layout.html",
+      },
+    ]
+  }
+
+  return []
 }
+
+// const resolveOverlaps = (droppedItems) => {
+//   const spacing = 10 // Define the minimum spacing between elements
+//   const suggestions = [...droppedItems]
+
+//   const isOverlapping = (item1, item2) => {
+//     return (
+//       item1.x < item2.x + item2.width &&
+//       item1.x + item1.width > item2.x &&
+//       item1.y < item2.y + item2.height &&
+//       item1.y + item1.height > item2.y
+//     )
+//   }
+
+//   for (let i = 0; i < suggestions.length; i++) {
+//     for (let j = i + 1; j < suggestions.length; j++) {
+//       const item1 = suggestions[i]
+//       const item2 = suggestions[j]
+
+//       if (isOverlapping(item1, item2)) {
+//         // Adjust item2 position to resolve overlap
+//         item2.y = item1.y + item1.height + spacing
+
+//         // Recheck for overlaps after adjustment
+//         for (let k = 0; k < suggestions.length; k++) {
+//           if (k !== j && isOverlapping(suggestions[k], item2)) {
+//             item2.x = suggestions[k].x + suggestions[k].width + spacing
+//           }
+//         }
+//       }
+//     }
+//   }
+
+//   return suggestions
+// }
+
+// const generateOverlapSuggestions = (droppedItems) => {
+//   const adjustedItems = resolveOverlaps([...droppedItems])
+//   return JSON.stringify(droppedItems) !== JSON.stringify(adjustedItems)
+//     ? [
+//         {
+//           items: adjustedItems,
+//           suggestion: "Some elements are overlapping. Adjusted their positions to avoid overlaps.",
+//           suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
+//         },
+//       ]
+//     : []
+// }
 
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
@@ -130,6 +195,12 @@ const generateSuggestions = (droppedItems) => {
   if (sizeSuggestions.length > 0) {
     suggestions.push(...sizeSuggestions)
   }
+
+  // Suggestion 5: Suggest resolving overlaps
+  // const overlapSuggestions = generateOverlapSuggestions(droppedItems)
+  // if (overlapSuggestions.length > 0) {
+  //   suggestions.push(...overlapSuggestions)
+  // }
 
   return suggestions
 }

@@ -1,8 +1,29 @@
-import { Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@mui/material" // Import other MUI components as needed
+import React from "react"
+import { Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, Input } from "@mui/material" // Import other MUI components as needed
 
-const EditElementDialog = ({ open, onClose, element, onTextChange, onColorChange, onTextColorChange, onRemove }) => {
+const EditElementDialog = ({
+  open,
+  onClose,
+  element,
+  onTextChange,
+  onColorChange,
+  onTextColorChange,
+  onRemove,
+  onFileChange,
+}) => {
   const isButton = element?.type === "button"
   const isImage = element?.type === "image"
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (ev) => {
+        onFileChange(ev.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   return (
     <Dialog open={open} onClose={onClose}>
@@ -29,7 +50,6 @@ const EditElementDialog = ({ open, onClose, element, onTextChange, onColorChange
             onChange={(e) => onColorChange(e.target.value)}
           />
         )}
-
         {isButton && (
           <TextField
             type="color"
@@ -41,10 +61,11 @@ const EditElementDialog = ({ open, onClose, element, onTextChange, onColorChange
             onChange={(e) => onTextColorChange(e.target.value)}
           />
         )}
+        {isImage && <Input type="file" margin="dense" fullWidth variant="outlined" onChange={handleFileChange} />}
       </DialogContent>
       <DialogActions>
-        {!isImage && <Button onClick={onClose}>Cancel</Button>}
-        {!isImage && <Button onClick={onClose}>Save</Button>}
+        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>Save</Button>
         <Button color="error" onClick={() => onRemove(element.id)}>
           Remove
         </Button>

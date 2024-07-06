@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import { Paper, Typography, Box } from "@mui/material"
 import { styled } from "@mui/material/styles"
 import { useDrop } from "react-dnd"
@@ -143,12 +143,22 @@ const Canvas = () => {
     setEditingItem({ ...editingItem, textColor: newColor })
   }
 
+  const handleFileChange = (newSrc) => {
+    setEditingItem({ ...editingItem, src: newSrc })
+  }
+
   const handleSaveDialog = () => {
     setEditDialogOpen(false)
     if (editingItem) {
       const updatedItems = canvasDroppedItems.map((item) =>
         item.id === editingItem.id
-          ? { ...item, text: editingItem.text, color: editingItem.color, textColor: editingItem.textColor }
+          ? {
+              ...item,
+              text: editingItem.text,
+              color: editingItem.color,
+              textColor: editingItem.textColor,
+              src: editingItem.src,
+            }
           : item,
       )
       setCanvasDroppedItems(updatedItems)
@@ -204,6 +214,7 @@ const Canvas = () => {
         onTextChange={handleTextChange}
         onColorChange={handleColorChange}
         onTextColorChange={handleTextColorChange}
+        onFileChange={handleFileChange}
         onRemove={handleRemoveItem}
       />
     </>
