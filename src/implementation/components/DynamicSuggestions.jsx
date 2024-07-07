@@ -176,53 +176,45 @@ const generateTextContentSuggestions = (droppedItems) => {
   return []
 }
 
-// const resolveOverlaps = (droppedItems) => {
-//   const spacing = 10 // Define the minimum spacing between elements
-//   const suggestions = [...droppedItems]
+const generateSpacingSuggestions = (droppedItems) => {
+  const spacingSuggestions = []
+  const updatedItems = [...droppedItems]
 
-//   const isOverlapping = (item1, item2) => {
-//     return (
-//       item1.x < item2.x + item2.width &&
-//       item1.x + item1.width > item2.x &&
-//       item1.y < item2.y + item2.height &&
-//       item1.y + item1.height > item2.y
-//     )
-//   }
+  // Example: Suggest adding spacing between elements that are too close
+  for (let i = 0; i < droppedItems.length - 1; i++) {
+    const item1 = droppedItems[i]
+    const item2 = droppedItems[i + 1]
+    const distance = Math.sqrt(Math.pow(item2.x - item1.x, 2) + Math.pow(item2.y - item1.y, 2))
 
-//   for (let i = 0; i < suggestions.length; i++) {
-//     for (let j = i + 1; j < suggestions.length; j++) {
-//       const item1 = suggestions[i]
-//       const item2 = suggestions[j]
+    if (distance < 50) {
+      const updatedItem2 = {
+        ...item2,
+        x: item1.x + 100,
+      }
+      spacingSuggestions.push(updatedItem2)
 
-//       if (isOverlapping(item1, item2)) {
-//         // Adjust item2 position to resolve overlap
-//         item2.y = item1.y + item1.height + spacing
+      // Update the items in the main list
+      const index = updatedItems.findIndex((item) => item.id === item2.id)
+      if (index !== -1) {
+        updatedItems[index] = updatedItem2
+      }
+    }
+  }
 
-//         // Recheck for overlaps after adjustment
-//         for (let k = 0; k < suggestions.length; k++) {
-//           if (k !== j && isOverlapping(suggestions[k], item2)) {
-//             item2.x = suggestions[k].x + suggestions[k].width + spacing
-//           }
-//         }
-//       }
-//     }
-//   }
+  if (spacingSuggestions.length > 0) {
+    return [
+      {
+        items: updatedItems,
+        suggestion: `Consider adding spacing between the following elements: ${spacingSuggestions
+          .map((item) => item.type + " " + (item.text || item.alt || item.id))
+          .join(", ")}.`,
+        suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
+      },
+    ]
+  }
 
-//   return suggestions
-// }
-
-// const generateOverlapSuggestions = (droppedItems) => {
-//   const adjustedItems = resolveOverlaps([...droppedItems])
-//   return JSON.stringify(droppedItems) !== JSON.stringify(adjustedItems)
-//     ? [
-//         {
-//           items: adjustedItems,
-//           suggestion: "Some elements are overlapping. Adjusted their positions to avoid overlaps.",
-//           suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
-//         },
-//       ]
-//     : []
-// }
+  return []
+}
 
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
@@ -308,6 +300,12 @@ const generateSuggestions = (droppedItems) => {
   const textContentSuggestions = generateTextContentSuggestions(droppedItems)
   if (textContentSuggestions.length > 0) {
     suggestions.push(...textContentSuggestions)
+  }
+
+  // Suggestion 7: Suggest spacing for elements that are too close
+  const spacingSuggestions = generateSpacingSuggestions(droppedItems)
+  if (spacingSuggestions.length > 0) {
+    suggestions.push(...spacingSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps
