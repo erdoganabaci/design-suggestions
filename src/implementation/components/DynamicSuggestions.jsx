@@ -293,6 +293,34 @@ const generateButtonLabelSuggestions = (droppedItems) => {
   return []
 }
 
+const generateAspectRatioSuggestions = (droppedItems) => {
+  const aspectRatioSuggestions = []
+  const updatedItems = []
+
+  droppedItems.forEach((item) => {
+    if (item.type === "image" && item.width / item.height !== 4 / 3) {
+      aspectRatioSuggestions.push({
+        ...item,
+        width: item.height * (4 / 3),
+      })
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (aspectRatioSuggestions.length > 0) {
+    return [
+      {
+        items: [...updatedItems, ...aspectRatioSuggestions],
+        suggestion: "Ensure images maintain a 4:3 aspect ratio.",
+        suggestionLink: "https://material.io/design/layout/spacing-methods.html",
+      },
+    ]
+  }
+
+  return []
+}
+
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
   // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
@@ -395,6 +423,12 @@ const generateSuggestions = (droppedItems) => {
   const buttonLabelSuggestions = generateButtonLabelSuggestions(droppedItems)
   if (buttonLabelSuggestions.length > 0) {
     suggestions.push(...buttonLabelSuggestions)
+  }
+
+  //  Suggestion 10 Ensure images maintain a 4:3 aspect ratio
+  const aspectRatioSuggestions = generateAspectRatioSuggestions(droppedItems)
+  if (aspectRatioSuggestions.length > 0) {
+    suggestions.push(...aspectRatioSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps
