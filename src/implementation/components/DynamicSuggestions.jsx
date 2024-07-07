@@ -352,7 +352,7 @@ const generateSuggestions = (droppedItems) => {
     suggestions.push(...spacingSuggestions)
   }
 
-  // Suggestion 8: Suggest combine Similar Elements Suggestions
+  // Suggestion 8: Suggest combine Similar Elements Suggestions remove similar elements
   const combineSimilarElementsSuggestions = generateCombineSimilarElementsSuggestions(droppedItems)
   if (combineSimilarElementsSuggestions.length > 0) {
     suggestions.push(...combineSimilarElementsSuggestions)
