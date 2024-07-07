@@ -228,6 +228,9 @@ const generateCombineSimilarElementsSuggestions = (droppedItems) => {
       const otherItem = droppedItems[i]
       if (item.type === otherItem.type && !similarElements.has(otherItem.id)) {
         if ((item.text && item.text === otherItem.text) || item.color === otherItem.color) {
+          if (item.type === "text" && item.text !== otherItem.text) {
+            continue
+          }
           isSimilar = true
           similarElements.add(otherItem.id)
           similarElements.add(item.id)
@@ -253,6 +256,34 @@ const generateCombineSimilarElementsSuggestions = (droppedItems) => {
         items: suggestionItems,
         suggestion: "Consider combining similar elements.",
         suggestionLink: "https://m2.material.io/design/layout/understanding-layout.html#composition",
+      },
+    ]
+  }
+
+  return []
+}
+
+const generateButtonLabelSuggestions = (droppedItems) => {
+  const buttonLabelSuggestions = []
+  const updatedItems = []
+
+  droppedItems.forEach((item) => {
+    if (item.type === "button" && !item.text) {
+      buttonLabelSuggestions.push({
+        ...item,
+        text: "Button",
+      })
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (buttonLabelSuggestions.length > 0) {
+    return [
+      {
+        items: [...updatedItems, ...buttonLabelSuggestions],
+        suggestion: "Ensure buttons have text labels for clarity.",
+        suggestionLink: "https://material.io/design/components/buttons.html",
       },
     ]
   }
@@ -356,6 +387,12 @@ const generateSuggestions = (droppedItems) => {
   const combineSimilarElementsSuggestions = generateCombineSimilarElementsSuggestions(droppedItems)
   if (combineSimilarElementsSuggestions.length > 0) {
     suggestions.push(...combineSimilarElementsSuggestions)
+  }
+
+  // Suggestion 9: Suggest ensuring buttons have text labels for clarity.
+  const buttonLabelSuggestions = generateButtonLabelSuggestions(droppedItems)
+  if (buttonLabelSuggestions.length > 0) {
+    suggestions.push(...buttonLabelSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps
