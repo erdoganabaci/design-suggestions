@@ -144,6 +144,38 @@ const generateFontSizeSuggestions = (droppedItems) => {
   return []
 }
 
+const generateTextContentSuggestions = (droppedItems) => {
+  const textContentSuggestions = []
+  const updatedItems = []
+  droppedItems.forEach((item) => {
+    if (item.type === "text" && !item.text) {
+      textContentSuggestions.push({
+        ...item,
+        text: "Placeholder text",
+      })
+    } else if (item.type === "text" && item.text.length > 100) {
+      textContentSuggestions.push({
+        ...item,
+        text: item.text.slice(0, 50) + "...",
+      })
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (textContentSuggestions.length > 0) {
+    return [
+      {
+        items: [...updatedItems, ...textContentSuggestions],
+        suggestion: "Consider adding or shortening text for the following elements.",
+        suggestionLink: "https://material.io/design/typography/the-type-system.html",
+      },
+    ]
+  }
+
+  return []
+}
+
 // const resolveOverlaps = (droppedItems) => {
 //   const spacing = 10 // Define the minimum spacing between elements
 //   const suggestions = [...droppedItems]
@@ -271,6 +303,11 @@ const generateSuggestions = (droppedItems) => {
   const fontSizeSuggestions = generateFontSizeSuggestions(droppedItems)
   if (fontSizeSuggestions.length > 0) {
     suggestions.push(...fontSizeSuggestions)
+  }
+  // Suggestion 6: Suggest shortening text content
+  const textContentSuggestions = generateTextContentSuggestions(droppedItems)
+  if (textContentSuggestions.length > 0) {
+    suggestions.push(...textContentSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps
