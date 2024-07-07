@@ -230,6 +230,8 @@ const generateCombineSimilarElementsSuggestions = (droppedItems) => {
         if ((item.text && item.text === otherItem.text) || item.color === otherItem.color) {
           if (item.type === "text" && item.text !== otherItem.text) {
             continue
+          } else if (item.type === "image" && item.src !== otherItem.src) {
+            continue
           }
           isSimilar = true
           similarElements.add(otherItem.id)
