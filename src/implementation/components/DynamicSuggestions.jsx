@@ -216,6 +216,50 @@ const generateSpacingSuggestions = (droppedItems) => {
   return []
 }
 
+const generateCombineSimilarElementsSuggestions = (droppedItems) => {
+  const similarSuggestions = []
+  const updatedItems = []
+  const similarElements = new Set()
+
+  // Check for similar elements (same type and similar properties)
+  droppedItems.forEach((item, index) => {
+    let isSimilar = false
+    for (let i = index + 1; i < droppedItems.length; i++) {
+      const otherItem = droppedItems[i]
+      if (item.type === otherItem.type && !similarElements.has(otherItem.id)) {
+        if ((item.text && item.text === otherItem.text) || item.color === otherItem.color) {
+          isSimilar = true
+          similarElements.add(otherItem.id)
+          similarElements.add(item.id)
+          break
+        }
+      }
+    }
+    if (isSimilar) {
+      similarSuggestions.push({
+        ...item,
+        suggestion: "Consider combining similar elements.",
+      })
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (similarSuggestions.length > 0) {
+    const filteredItems = updatedItems.filter((item) => !similarElements.has(item.id))
+    const suggestionItems = filteredItems.concat(similarSuggestions)
+    return [
+      {
+        items: suggestionItems,
+        suggestion: "Consider combining similar elements.",
+        suggestionLink: "https://m2.material.io/design/layout/understanding-layout.html#composition",
+      },
+    ]
+  }
+
+  return []
+}
+
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
   // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
@@ -306,6 +350,12 @@ const generateSuggestions = (droppedItems) => {
   const spacingSuggestions = generateSpacingSuggestions(droppedItems)
   if (spacingSuggestions.length > 0) {
     suggestions.push(...spacingSuggestions)
+  }
+
+  // Suggestion 8: Suggest combine Similar Elements Suggestions
+  const combineSimilarElementsSuggestions = generateCombineSimilarElementsSuggestions(droppedItems)
+  if (combineSimilarElementsSuggestions.length > 0) {
+    suggestions.push(...combineSimilarElementsSuggestions)
   }
 
   // Suggestion 5: Suggest resolving overlaps
