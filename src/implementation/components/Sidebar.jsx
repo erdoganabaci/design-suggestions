@@ -7,6 +7,7 @@ const Sidebar = () => {
     { type: "button", text: "Button" },
     { type: "text", text: "Heading" },
     { type: "image", src: "https://placehold.co/600x400/black/white", alt: "Image description" },
+    { type: "switch", text: "Label Button" },
     // Add more elements as needed
   ]
 

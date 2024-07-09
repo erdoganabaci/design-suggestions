@@ -5,7 +5,7 @@ import { useDrop } from "react-dnd"
 import { useAtom } from "jotai"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import EditElementDialog from "./EditElementDialog"
-import DraggableResizableElement from "./DraggableResizableElement" // Import DraggableResizableElement
+import DraggableResizableElement from "./DraggableResizableElement"
 
 const Device = styled("div")(({ theme }) => ({
   border: "2px solid #000000",
@@ -76,11 +76,9 @@ const Canvas = () => {
       const x = clientOffset.x - componentRect.left
       const y = clientOffset.y - componentRect.top
 
-      // Check if the item already exists in the canvasDroppedItems
       const existingItemIndex = canvasDroppedItems.findIndex((droppedItem) => droppedItem.id === item.id)
 
       if (existingItemIndex !== -1) {
-        // Update the position of the existing item
         const updatedItems = [...canvasDroppedItems]
         updatedItems[existingItemIndex] = {
           ...updatedItems[existingItemIndex],
@@ -89,7 +87,6 @@ const Canvas = () => {
         }
         setCanvasDroppedItems(updatedItems)
       } else {
-        // Add the new item with its properties and unique ID
         const newItemId = uniqueId()
         const newItem = {
           ...item,
@@ -98,9 +95,9 @@ const Canvas = () => {
           id: newItemId,
           x,
           y,
-          width: 91, // default width
-          height: 36, // default height
-          fontSize: item.type === "text" ? 14 : undefined, // default font size for text
+          width: 91,
+          height: 36,
+          fontSize: item.type === "text" ? 14 : undefined,
         }
         setCanvasDroppedItems([...canvasDroppedItems, newItem])
       }

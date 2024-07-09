@@ -1,6 +1,6 @@
 import React from "react"
 import { useDrag } from "react-dnd"
-import { Button, Typography, Box } from "@mui/material"
+import { Button, Typography, Box, Switch, FormControlLabel } from "@mui/material"
 import { ResizableBox } from "react-resizable"
 import SmartHomeSwitch from "./SmartHomeSwitch" // Ensure this is imported correctly
 import "react-resizable/css/styles.css"
@@ -52,7 +52,28 @@ const DraggableResizableElement = ({
       case "image":
         return <Box component="img" src={src} alt={alt} sx={{ width: "100%", height: "100%" }} />
       case "switch":
-        return <SmartHomeSwitch label={text ? text : alt} checked={checked} />
+        return (
+          <FormControlLabel
+            control={
+              <Switch
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#00008B",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 139, 0.08)",
+                    },
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#00008B",
+                  },
+                }}
+              />
+            }
+            label={text}
+            labelPlacement="start"
+            sx={{ color: "black", width: "200px" }}
+          />
+        )
       default:
         return <Typography color="error">Unsupported element type</Typography>
     }

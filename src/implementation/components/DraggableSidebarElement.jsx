@@ -1,17 +1,16 @@
 import React from "react"
 import { useDrag } from "react-dnd"
-import { Button, Typography, Box } from "@mui/material" // Import other MUI components as needed
+import { Button, Typography, Box, Switch, FormControlLabel } from "@mui/material"
 
 const DraggableElement = ({ type, text, src, alt }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type,
-    item: { type, text, src, alt }, // Include all properties
+    item: { type, text, src, alt },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }))
 
-  // Function to determine and render rich elements
   const renderElement = () => {
     switch (type) {
       case "button":
@@ -33,8 +32,31 @@ const DraggableElement = ({ type, text, src, alt }) => {
         return <Typography variant="body1">{text}</Typography>
       case "image":
         return <Box component="img" src={src} alt={alt} width={"100px"} height={"100px"} />
+      case "switch":
+        return (
+          <FormControlLabel
+            control={
+              <Switch
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#00008B",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 139, 0.08)",
+                    },
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#00008B",
+                  },
+                }}
+              />
+            }
+            label={text}
+            labelPlacement="start"
+            sx={{ ml: -0.5, color: "black" }}
+          />
+        )
       default:
-        return <div>Unsupported element type</div> // Handle unknown types
+        return <div>Unsupported element type</div>
     }
   }
 

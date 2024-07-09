@@ -1,9 +1,8 @@
-import React, { useEffect } from "react"
-import { Grid, Paper, IconButton, Tooltip, Box, Button, Typography } from "@mui/material"
+import React, { useEffect, useState } from "react"
+import { Grid, Paper, IconButton, Tooltip, Box, Button, Typography, Switch, FormControlLabel } from "@mui/material"
 import InfoIcon from "@mui/icons-material/Info"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
 import { useAtom } from "jotai"
-// import { displaySuggestionsAtom } from "../../store/displaySuggestions.atom";
 
 const isColorDark = (color) => {
   const hex = color.replace("#", "")
@@ -322,6 +321,43 @@ const generateAspectRatioSuggestions = (droppedItems) => {
   return []
 }
 
+const generateCreativeSuggestions = (droppedItems) => {
+  const suggestions = []
+  const updatedItems = []
+
+  droppedItems.forEach((item) => {
+    if (item.type === "button") {
+      // Suggest a switch button instead of a regular button
+      suggestions.push({
+        ...item,
+        type: "switch",
+        text: item.text || "Switch",
+      })
+    } else if (item.type === "switch") {
+      // Suggest a regular button instead of a switch button
+      suggestions.push({
+        ...item,
+        type: "button",
+        text: item.text || "Button",
+      })
+    } else {
+      updatedItems.push(item)
+    }
+  })
+
+  if (suggestions.length > 0) {
+    return [
+      {
+        items: [...updatedItems, ...suggestions],
+        suggestion: "Consider using creative alternatives for your elements.",
+        suggestionLink: "https://material.io/design/components/buttons.html",
+      },
+    ]
+  }
+
+  return []
+}
+
 const generateSuggestions = (droppedItems) => {
   const suggestions = []
   // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
@@ -432,6 +468,12 @@ const generateSuggestions = (droppedItems) => {
     suggestions.push(...aspectRatioSuggestions)
   }
 
+  // Suggestion 11: Creative suggestions for buttons and switches
+  const creativeSuggestions = generateCreativeSuggestions(droppedItems)
+  if (creativeSuggestions.length > 0) {
+    suggestions.push(...creativeSuggestions)
+  }
+
   // Suggestion 5: Suggest resolving overlaps
   // const overlapSuggestions = generateOverlapSuggestions(droppedItems)
   // if (overlapSuggestions.length > 0) {
@@ -443,65 +485,93 @@ const generateSuggestions = (droppedItems) => {
 
 const DynamicSuggestions = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
-  //   const [displaySuggestions, setDisplaySuggestions] = useAtom(displaySuggestionsAtom);
+  const [suggestions, setSuggestions] = React.useState([])
+  const [hiddenSuggestions, setHiddenSuggestions] = useState([])
 
-  const [suggestions, setSuggestions] = React.useState([[], []])
-  console.log("suggestions", suggestions)
   useEffect(() => {
     setSuggestions(generateSuggestions(canvasDroppedItems))
   }, [canvasDroppedItems])
 
   const onHandleSuggestionApply = (suggestionSet) => {
-    console.log("Suggestion applied", suggestionSet)
     setCanvasDroppedItems(suggestionSet)
   }
 
+  const onHandleSuggestionHide = (index) => {
+    setHiddenSuggestions((prevHidden) => [...prevHidden, index])
+  }
+
   const displaySuggestedItems = (suggestionItem) => {
-    if (suggestionItem.type === "text") {
-      return (
-        <Typography
-          key={suggestionItem.id}
-          sx={{
-            fontSize: "10px",
-            color: suggestionItem.textColor,
-            // backgroundColor: suggestionItem.color,
-            margin: "5px 0",
-            ":hover": {
+    switch (suggestionItem.type) {
+      case "text":
+        return (
+          <Typography
+            key={suggestionItem.id}
+            sx={{
+              fontSize: "10px",
+              color: suggestionItem.textColor,
+              margin: "5px 0",
+              ":hover": {
+                backgroundColor: suggestionItem.color,
+              },
+            }}
+          >
+            {suggestionItem.text}
+          </Typography>
+        )
+      case "button":
+        return (
+          <Button
+            key={suggestionItem.id}
+            sx={{
+              fontSize: "10px",
+              color: suggestionItem.textColor,
               backgroundColor: suggestionItem.color,
-            },
-          }}
-        >
-          {suggestionItem.text}
-        </Typography>
-      )
-    } else if (suggestionItem.type === "button") {
-      return (
-        <Button
-          key={suggestionItem.id}
-          sx={{
-            fontSize: "10px",
-            color: suggestionItem.textColor,
-            backgroundColor: suggestionItem.color,
-            width: "60px",
-            ":hover": {
-              backgroundColor: suggestionItem.color,
-            },
-          }}
-          variant="contained"
-        >
-          {suggestionItem.text}
-        </Button>
-      )
-    } else if (suggestionItem.type === "image") {
-      return (
-        <Box
-          key={suggestionItem.id}
-          component="img"
-          src={suggestionItem.src}
-          alt={suggestionItem.alt}
-          sx={{ width: "80%", height: "80%" }}
-        />
-      )
+              width: "60px",
+              ":hover": {
+                backgroundColor: suggestionItem.color,
+              },
+            }}
+            variant="contained"
+          >
+            {suggestionItem.text}
+          </Button>
+        )
+      case "image":
+        return (
+          <Box
+            key={suggestionItem.id}
+            component="img"
+            src={suggestionItem.src}
+            alt={suggestionItem.alt}
+            sx={{ width: "80%", height: "80%" }}
+          />
+        )
+      case "switch":
+        return (
+          <FormControlLabel
+            key={suggestionItem.id}
+            control={
+              <Switch
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#00008B",
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 139, 0.08)",
+                    },
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#00008B",
+                  },
+                }}
+              />
+            }
+            label={suggestionItem.text}
+            labelPlacement="start"
+            sx={{ color: "black" }}
+          />
+        )
+      default:
+        return <div>Unsupported element type</div>
     }
   }
 
@@ -512,7 +582,8 @@ const DynamicSuggestions = () => {
           (suggestionSet, index) =>
             suggestionSet &&
             suggestionSet.items &&
-            suggestionSet.items.length > 0 && (
+            suggestionSet.items.length > 0 &&
+            !hiddenSuggestions.includes(index) && (
               <Grid item key={index} sx={{ padding: "10px", width: "100%" }}>
                 <Paper elevation={3} sx={{ padding: "2px" }}>
                   <Box mb={1}>
@@ -530,42 +601,6 @@ const DynamicSuggestions = () => {
                       }}
                     >
                       {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
-
-                      {/* {displaySuggestedItems(suggestions)} */}
-                      {/* {canvasDroppedItems.map((item) => (
-                        <Button
-                          key={item.id}
-                          sx={{
-                            fontSize: "10px",
-                            color: item.textColor,
-                            backgroundColor: item.color,
-                            margin: "5px 0",
-                            ":hover": {
-                              backgroundColor: item.color,
-                            },
-                          }}
-                          variant="contained"
-                        >
-                          {item.text}
-                        </Button>
-                      ))}
-                      {suggestionSet.items.map((suggestion) => (
-                        <Button
-                          key={suggestion.id}
-                          sx={{
-                            fontSize: "10px",
-                            color: suggestion.textColor,
-                            backgroundColor: suggestion.color,
-                            margin: "5px 0",
-                            ":hover": {
-                              backgroundColor: suggestion.color,
-                            },
-                          }}
-                          variant="contained"
-                        >
-                          {suggestion.text}
-                        </Button>
-                      ))} */}
                     </Box>
                   </Box>
 
@@ -606,6 +641,7 @@ const DynamicSuggestions = () => {
                     </Button>
                     <Button
                       color="error"
+                      onClick={() => onHandleSuggestionHide(index)}
                       sx={{
                         width: "60px",
                         fontSize: "10px",
