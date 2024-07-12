@@ -73,10 +73,21 @@ const generateSizeSuggestions = (droppedItems) => {
   return []
 }
 
-const generateFontSizeSuggestions = (droppedItems) => {
-  const minFontSize = 12
-  const maxFontSize = 36
-  const suggestedFontSize = 14 // Placeholder for
+const getFontSizeLimits = (screenWidth) => {
+  if (screenWidth <= 600) {
+    // mobile devices
+    return { minFontSize: 14, maxFontSize: 20 }
+  } else if (screenWidth <= 960) {
+    // tablet devices
+    return { minFontSize: 16, maxFontSize: 24 }
+  } else {
+    return { minFontSize: 18, maxFontSize: 30 }
+  }
+}
+
+const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
+  const { minFontSize, maxFontSize } = getFontSizeLimits(screenWidth)
+  const suggestedFontSize = (minFontSize + maxFontSize) / 2
   const fontSizeSuggestions = []
   const updatedItems = []
 
@@ -485,19 +496,29 @@ const generateSuggestions = (droppedItems) => {
 
 const DynamicSuggestions = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
-  const [suggestions, setSuggestions] = React.useState([])
+  const [suggestions, setSuggestions] = useState([])
   const [hiddenSuggestions, setHiddenSuggestions] = useState([])
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
 
   useEffect(() => {
-    setSuggestions(generateSuggestions(canvasDroppedItems))
-  }, [canvasDroppedItems])
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  useEffect(() => {
+    setSuggestions(generateSuggestions(canvasDroppedItems, screenWidth))
+  }, [canvasDroppedItems, screenWidth])
 
   const onHandleSuggestionApply = (suggestionSet) => {
     setCanvasDroppedItems(suggestionSet)
   }
 
-  const onHandleSuggestionHide = (index) => {
-    setHiddenSuggestions((prevHidden) => [...prevHidden, index])
+  const onHandleSuggestionHide = (suggestionIndex) => {
+    setHiddenSuggestions((prevHidden) => [...prevHidden, suggestionIndex])
   }
 
   const displaySuggestedItems = (suggestionItem) => {
