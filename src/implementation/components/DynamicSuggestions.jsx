@@ -352,7 +352,7 @@ const generateSuggestions = (droppedItems) => {
           id: "0ivbii7gm",
           x: 350,
           y: 23,
-          fontSize: 14,
+          fontSize: 20,
         },
         ...droppedItems,
       ]
