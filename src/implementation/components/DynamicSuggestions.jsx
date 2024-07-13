@@ -84,7 +84,8 @@ const getSuggestedFontSize = (screenWidth) => {
 }
 
 const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
-  const suggestedFontSize = getSuggestedFontSize(screenWidth)
+  const canvasScreenWidth = 768
+  const suggestedFontSize = getSuggestedFontSize(canvasScreenWidth)
   const fontSizeSuggestions = []
   const updatedItems = []
 
@@ -418,6 +419,7 @@ const generateSuggestions = (droppedItems) => {
     suggestions.push(...fontSizeSuggestions)
   }
   // Suggestion 6: Suggest shortening text content
+  // https://m2.material.io/design/typography/the-type-system.html
   const textContentSuggestions = generateTextContentSuggestions(droppedItems)
   if (textContentSuggestions.length > 0) {
     suggestions.push(...textContentSuggestions)
