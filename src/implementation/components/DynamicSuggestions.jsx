@@ -73,35 +73,27 @@ const generateSizeSuggestions = (droppedItems) => {
   return []
 }
 
-const getFontSizeLimits = (screenWidth) => {
+const getSuggestedFontSize = (screenWidth) => {
   if (screenWidth <= 600) {
-    // mobile devices
-    return { minFontSize: 14, maxFontSize: 20 }
+    return 18 // mobile devices
   } else if (screenWidth <= 960) {
-    // tablet devices
-    return { minFontSize: 16, maxFontSize: 24 }
+    return 20 // tablet devices
   } else {
-    return { minFontSize: 18, maxFontSize: 30 }
+    return 24 // desktop devices
   }
 }
 
 const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
-  const { minFontSize, maxFontSize } = getFontSizeLimits(screenWidth)
-  const suggestedFontSize = (minFontSize + maxFontSize) / 2
+  const suggestedFontSize = getSuggestedFontSize(screenWidth)
   const fontSizeSuggestions = []
   const updatedItems = []
 
   droppedItems.forEach((item) => {
     if (item.type === "text" && item.fontSize) {
-      if (item.fontSize < minFontSize) {
+      if (item.fontSize !== suggestedFontSize) {
         fontSizeSuggestions.push({
           ...item,
-          fontSize: minFontSize,
-        })
-      } else if (item.fontSize > maxFontSize) {
-        fontSizeSuggestions.push({
-          ...item,
-          fontSize: maxFontSize,
+          fontSize: suggestedFontSize,
         })
       } else {
         updatedItems.push(item)
@@ -112,41 +104,17 @@ const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
   })
 
   if (fontSizeSuggestions.length > 0) {
-    const oversizedItems = fontSizeSuggestions.filter((item) => item.fontSize >= maxFontSize)
-    const undersizedItems = fontSizeSuggestions.filter((item) => item.fontSize <= minFontSize)
-
-    const oversizedElementList = oversizedItems
-      .map((item) => item.type + " " + (item.text || item.alt || item.id))
-      .join(", ")
-    const undersizedElementList = undersizedItems
+    const changedItemsList = fontSizeSuggestions
       .map((item) => item.type + " " + (item.text || item.alt || item.id))
       .join(", ")
 
-    const suggestions = []
-
-    if (oversizedItems.length > 0) {
-      const suggestedOversizedItems = oversizedItems.map((item) => ({
-        ...item,
-        fontSize: suggestedFontSize,
-      }))
-      suggestions.push({
-        items: [...updatedItems, ...suggestedOversizedItems],
-        suggestion: `The following elements have a font size that is too large: ${oversizedElementList}. Consider reducing their font size to ${maxFontSize}px.`,
+    const suggestions = [
+      {
+        items: [...updatedItems, ...fontSizeSuggestions],
+        suggestion: `The following elements have been adjusted to the suggested font size: ${changedItemsList}.`,
         suggestionLink: "https://material.io/design/typography/the-type-system.html",
-      })
-    }
-
-    if (undersizedItems.length > 0) {
-      const suggestedUndersizedItems = undersizedItems.map((item) => ({
-        ...item,
-        fontSize: suggestedFontSize,
-      }))
-      suggestions.push({
-        items: [...updatedItems, ...suggestedUndersizedItems],
-        suggestion: `The following elements have a font size that is too small: ${undersizedElementList}. Consider increasing their font size to ${minFontSize}px.`,
-        suggestionLink: "https://material.io/design/typography/the-type-system.html",
-      })
-    }
+      },
+    ]
 
     return suggestions
   }
