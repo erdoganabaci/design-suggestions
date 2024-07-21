@@ -147,7 +147,7 @@ const generateTextContentSuggestions = (droppedItems) => {
       {
         items: [...updatedItems, ...textContentSuggestions],
         suggestion: "Consider adding or shortening text for the following elements.",
-        suggestionLink: "https://material.io/design/typography/the-type-system.html",
+        suggestionLink: "https://m2.material.io/components/buttons#anatomy",
       },
     ]
   }
@@ -273,33 +273,33 @@ const generateButtonLabelSuggestions = (droppedItems) => {
   return []
 }
 
-const generateAspectRatioSuggestions = (droppedItems) => {
-  const aspectRatioSuggestions = []
-  const updatedItems = []
+// const generateAspectRatioSuggestions = (droppedItems) => {
+//   const aspectRatioSuggestions = []
+//   const updatedItems = []
 
-  droppedItems.forEach((item) => {
-    if (item.type === "image" && item.width / item.height !== 4 / 3) {
-      aspectRatioSuggestions.push({
-        ...item,
-        width: item.height * (4 / 3),
-      })
-    } else {
-      updatedItems.push(item)
-    }
-  })
+//   droppedItems.forEach((item) => {
+//     if (item.type === "image" && item.width / item.height !== 4 / 3) {
+//       aspectRatioSuggestions.push({
+//         ...item,
+//         width: item.height * (4 / 3),
+//       })
+//     } else {
+//       updatedItems.push(item)
+//     }
+//   })
 
-  if (aspectRatioSuggestions.length > 0) {
-    return [
-      {
-        items: [...updatedItems, ...aspectRatioSuggestions],
-        suggestion: "Ensure images maintain a 4:3 aspect ratio.",
-        suggestionLink: "https://material.io/design/layout/spacing-methods.html",
-      },
-    ]
-  }
+//   if (aspectRatioSuggestions.length > 0) {
+//     return [
+//       {
+//         items: [...updatedItems, ...aspectRatioSuggestions],
+//         suggestion: "Ensure images maintain a 4:3 aspect ratio.",
+//         suggestionLink: "https://material.io/design/layout/spacing-methods.html",
+//       },
+//     ]
+//   }
 
-  return []
-}
+//   return []
+// }
 
 const generateCreativeSuggestions = (droppedItems) => {
   const suggestions = []
@@ -443,11 +443,11 @@ const generateSuggestions = (droppedItems) => {
     suggestions.push(...buttonLabelSuggestions)
   }
 
-  //  Suggestion 10 Ensure images maintain a 4:3 aspect ratio
-  const aspectRatioSuggestions = generateAspectRatioSuggestions(droppedItems)
-  if (aspectRatioSuggestions.length > 0) {
-    suggestions.push(...aspectRatioSuggestions)
-  }
+  // //  Suggestion 10 Ensure images maintain a 4:3 aspect ratio
+  // const aspectRatioSuggestions = generateAspectRatioSuggestions(droppedItems)
+  // if (aspectRatioSuggestions.length > 0) {
+  //   suggestions.push(...aspectRatioSuggestions)
+  // }
 
   // Suggestion 11: Creative suggestions for buttons and switches
   const creativeSuggestions = generateCreativeSuggestions(droppedItems)
