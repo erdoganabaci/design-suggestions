@@ -83,7 +83,7 @@ const getSuggestedFontSize = (screenWidth) => {
   }
 }
 
-const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
+const generateFontSizeSuggestions = (droppedItems) => {
   const canvasScreenWidth = 768
   const suggestedFontSize = getSuggestedFontSize(canvasScreenWidth)
   const fontSizeSuggestions = []
@@ -123,19 +123,25 @@ const generateFontSizeSuggestions = (droppedItems, screenWidth) => {
   return []
 }
 
-const generateTextContentSuggestions = (droppedItems) => {
+const generateTextContentSuggestions = (droppedItems, screenWidth) => {
   const textContentSuggestions = []
   const updatedItems = []
+  // average character width is a rough estimate commonly used in calculations where precise font metrics are not available.
+  const AVERAGE_CHAR_WIDTH = 10
+
+  const maxTextLength = Math.floor((screenWidth * 0.9) / AVERAGE_CHAR_WIDTH) // Calculate maximum number of characters based on screen width
+  const truncationLength = Math.floor(maxTextLength / 2) // Truncate to half the maximum length
+
   droppedItems.forEach((item) => {
     if (item.type === "text" && !item.text) {
       textContentSuggestions.push({
         ...item,
         text: "Placeholder text",
       })
-    } else if (item.type === "text" && item.text.length > 100) {
+    } else if (item.type === "text" && item.text.length > maxTextLength) {
       textContentSuggestions.push({
         ...item,
-        text: item.text.slice(0, 50) + "...",
+        text: item.text.slice(0, truncationLength) + "...",
       })
     } else {
       updatedItems.push(item)
@@ -338,7 +344,7 @@ const generateCreativeSuggestions = (droppedItems) => {
   return []
 }
 
-const generateSuggestions = (droppedItems) => {
+const generateSuggestions = (droppedItems, screenWidth) => {
   const suggestions = []
   // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
   const hasTitleText = droppedItems.some((item) => item.type === "text" && item.y > 7 && item.y < 116)
@@ -420,7 +426,7 @@ const generateSuggestions = (droppedItems) => {
   }
   // Suggestion 6: Suggest shortening text content
   // https://m2.material.io/design/typography/the-type-system.html
-  const textContentSuggestions = generateTextContentSuggestions(droppedItems)
+  const textContentSuggestions = generateTextContentSuggestions(droppedItems, screenWidth)
   if (textContentSuggestions.length > 0) {
     suggestions.push(...textContentSuggestions)
   }
