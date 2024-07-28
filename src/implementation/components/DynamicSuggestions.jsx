@@ -163,9 +163,14 @@ const generateTextContentSuggestions = (droppedItems, screenWidth) => {
   return []
 }
 
-const generateSpacingSuggestions = (droppedItems) => {
+const generateSpacingSuggestions = (droppedItems, screenWidth, screenHeight) => {
   const spacingSuggestions = []
   const updatedItems = [...droppedItems]
+
+  // Define minimum distance and additional spacing based on screen dimensions
+  const minDistance = Math.sqrt((screenWidth * 0.05) ** 2 + (screenHeight * 0.05) ** 2) // Example: 5% of screen width and height
+  const additionalSpacingX = screenWidth * 0.1 // Example: 10% of screen width
+  const additionalSpacingY = screenHeight * 0.05 // Example: 5% of screen height
 
   // Example: Suggest adding spacing between elements that are too close
   for (let i = 0; i < droppedItems.length - 1; i++) {
@@ -173,11 +178,11 @@ const generateSpacingSuggestions = (droppedItems) => {
     const item2 = droppedItems[i + 1]
     const distance = Math.sqrt(Math.pow(item2.x - item1.x, 2) + Math.pow(item2.y - item1.y, 2))
 
-    if (distance < 50) {
+    if (distance < minDistance) {
       const updatedItem2 = {
         ...item2,
-        x: item1.x + 100,
-        y: item1.y + 50,
+        x: item1.x + additionalSpacingX,
+        y: item1.y + additionalSpacingY,
       }
       spacingSuggestions.push(updatedItem2)
 
@@ -196,7 +201,7 @@ const generateSpacingSuggestions = (droppedItems) => {
         suggestion: `Consider adding spacing between the following elements: ${spacingSuggestions
           .map((item) => item.type + " " + (item.text || item.alt || item.id))
           .join(", ")}.`,
-        suggestionLink: "https://material.io/design/layout/spacing-alignment.html",
+        suggestionLink: "https://m1.material.io/layout/metrics-keylines.html#metrics-keylines-keylines-spacing",
       },
     ]
   }
@@ -434,7 +439,7 @@ const generateSuggestions = (droppedItems, screenWidth, screenHeight) => {
   }
 
   // Suggestion 7: Suggest spacing for elements that are too close
-  const spacingSuggestions = generateSpacingSuggestions(droppedItems)
+  const spacingSuggestions = generateSpacingSuggestions(droppedItems, screenWidth, screenHeight)
   if (spacingSuggestions.length > 0) {
     suggestions.push(...spacingSuggestions)
   }
