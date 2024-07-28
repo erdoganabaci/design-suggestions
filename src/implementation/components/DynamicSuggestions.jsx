@@ -220,12 +220,16 @@ const generateCombineSimilarElementsSuggestions = (droppedItems) => {
     for (let i = index + 1; i < droppedItems.length; i++) {
       const otherItem = droppedItems[i]
       if (item.type === otherItem.type && !similarElements.has(otherItem.id)) {
-        if ((item.text && item.text === otherItem.text) || item.color === otherItem.color) {
-          if (item.type === "text" && item.text !== otherItem.text) {
-            continue
-          } else if (item.type === "image" && item.src !== otherItem.src) {
-            continue
-          }
+        // Check if the items are of type 'text' and have different text properties
+        if (item.type === "text" && item.text !== otherItem.text) {
+          continue
+        }
+        // Check if the items are of type 'image' and have different src properties
+        if (item.type === "image" && item.src !== otherItem.src) {
+          continue
+        }
+        // Check if items have the same text or color property
+        if (item.text && item.text === otherItem.text && item.color === otherItem.color) {
           isSimilar = true
           similarElements.add(otherItem.id)
           similarElements.add(item.id)
