@@ -32,11 +32,12 @@ const lightenColor = (color, percent) => {
   )
 }
 
-const generateSizeSuggestions = (droppedItems) => {
+const generateSizeSuggestions = (droppedItems, screenWidth, screenHeight) => {
+  // https://m2.material.io/components/buttons#behavior
+  // https://m2.material.io/design/communication/imagery.html#usage
   const maxSizes = {
-    button: { width: 200, height: 50 },
-    text: { width: 300, height: 100 },
-    image: { width: 400, height: 300 },
+    button: { width: screenWidth * 0.2, height: screenHeight * 0.1 }, // 20% of screen width and 10% of screen height
+    image: { width: screenWidth * 0.6, height: screenHeight * 0.5 }, // 60% of screen width and 50% of screen height
   }
 
   const suggestions = []
@@ -72,14 +73,14 @@ const generateSizeSuggestions = (droppedItems) => {
 
   return []
 }
-
+// https://matthewjamestaylor.com/responsive-font-size#:~:text=The%20consensus%20is%20mobile%20font,large%20devices%20is%2018px%20%2D%2020px.
 const getSuggestedFontSize = (screenWidth) => {
   if (screenWidth <= 600) {
-    return 18 // mobile devices
+    return 16 // mobile devices
   } else if (screenWidth <= 960) {
-    return 20 // tablet devices
+    return 18 // tablet devices
   } else {
-    return 24 // desktop devices
+    return 20 // desktop devices
   }
 }
 
@@ -113,7 +114,8 @@ const generateFontSizeSuggestions = (droppedItems) => {
       {
         items: [...updatedItems, ...fontSizeSuggestions],
         suggestion: `The following elements have been adjusted to the suggested font size: ${changedItemsList}.`,
-        suggestionLink: "https://material.io/design/typography/the-type-system.html",
+        suggestionLink:
+          "https://matthewjamestaylor.com/responsive-font-size#:~:text=The%20consensus%20is%20mobile%20font,large%20devices%20is%2018px%20%2D%2020px.",
       },
     ]
 
@@ -344,7 +346,7 @@ const generateCreativeSuggestions = (droppedItems) => {
   return []
 }
 
-const generateSuggestions = (droppedItems, screenWidth) => {
+const generateSuggestions = (droppedItems, screenWidth, screenHeight) => {
   const suggestions = []
   // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
   const hasTitleText = droppedItems.some((item) => item.type === "text" && item.y > 7 && item.y < 116)
@@ -413,7 +415,7 @@ const generateSuggestions = (droppedItems, screenWidth) => {
   }
 
   // Suggestion 4: Suggest resizing elements that are too large
-  const sizeSuggestions = generateSizeSuggestions(droppedItems)
+  const sizeSuggestions = generateSizeSuggestions(droppedItems, screenWidth, screenHeight)
 
   if (sizeSuggestions.length > 0) {
     suggestions.push(...sizeSuggestions)
@@ -496,10 +498,12 @@ const DynamicSuggestions = () => {
   const [suggestions, setSuggestions] = useState([])
   const [hiddenSuggestions, setHiddenSuggestions] = useState([])
   const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight)
 
   useEffect(() => {
     const handleResize = () => {
       setScreenWidth(window.innerWidth)
+      setScreenHeight(window.innerHeight)
     }
 
     window.addEventListener("resize", handleResize)
@@ -507,8 +511,8 @@ const DynamicSuggestions = () => {
   }, [])
 
   useEffect(() => {
-    setSuggestions(generateSuggestions(canvasDroppedItems, screenWidth))
-  }, [canvasDroppedItems, screenWidth])
+    setSuggestions(generateSuggestions(canvasDroppedItems, screenWidth, screenHeight))
+  }, [canvasDroppedItems, screenWidth, screenHeight])
 
   const onHandleSuggestionApply = (suggestionSet) => {
     setCanvasDroppedItems(suggestionSet)
