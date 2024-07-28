@@ -464,6 +464,27 @@ const generateSuggestions = (droppedItems) => {
   return suggestions
 }
 
+// Define your canvas and preview dimensions
+const CANVAS_WIDTH = 768 // Adjust this based on your actual canvas width
+const CANVAS_HEIGHT = 75 * (window.innerHeight / 100) // 75% of the window height
+const PREVIEW_WIDTH = 200 // Adjust this based on your actual preview width
+const PREVIEW_HEIGHT = 200 // Adjust this based on your actual preview height
+
+// Calculate projected properties without modifying original x, y, width, height, and fontSize
+const calculateProjectedProperties = (items) => {
+  const widthScale = PREVIEW_WIDTH / CANVAS_WIDTH
+  const heightScale = PREVIEW_HEIGHT / CANVAS_HEIGHT
+
+  return items.map((item) => ({
+    ...item,
+    projectedX: item.x * widthScale,
+    projectedY: item.y * heightScale,
+    projectedWidth: item.width * widthScale,
+    projectedHeight: item.height * heightScale,
+    projectedFontSize: item.fontSize ? item.fontSize * widthScale : undefined,
+  }))
+}
+
 const DynamicSuggestions = () => {
   const [canvasDroppedItems, setCanvasDroppedItems] = useAtom(canvasDroppedItemsAtom)
   const [suggestions, setSuggestions] = useState([])
@@ -498,12 +519,12 @@ const DynamicSuggestions = () => {
           <Typography
             key={suggestionItem.id}
             sx={{
-              fontSize: "10px",
+              fontSize: `${suggestionItem.projectedFontSize + 5}px`,
               color: suggestionItem.textColor,
-              margin: "5px 0",
-              ":hover": {
-                backgroundColor: suggestionItem.color,
-              },
+              position: "absolute",
+              left: `${suggestionItem.projectedX}px`,
+              top: `${suggestionItem.projectedY}px`,
+              // backgroundColor: suggestionItem.color,
             }}
           >
             {suggestionItem.text}
@@ -514,12 +535,18 @@ const DynamicSuggestions = () => {
           <Button
             key={suggestionItem.id}
             sx={{
-              fontSize: "10px",
+              fontSize: "5px",
+              // fontSize: `${suggestionItem.projectedFontSize}px`,
+              padding: "10px",
               color: suggestionItem.textColor,
               backgroundColor: suggestionItem.color,
-              width: "60px",
+              position: "absolute",
+              left: `${suggestionItem.projectedX}px`,
+              top: `${suggestionItem.projectedY}px`,
+              width: `${suggestionItem.projectedWidth}px`,
+              height: `${suggestionItem.projectedHeight}px`,
               ":hover": {
-                backgroundColor: suggestionItem.color,
+                backgroundColor: "#DDE8F9",
               },
             }}
             variant="contained"
@@ -534,7 +561,13 @@ const DynamicSuggestions = () => {
             component="img"
             src={suggestionItem.src}
             alt={suggestionItem.alt}
-            sx={{ width: "80%", height: "80%" }}
+            sx={{
+              position: "absolute",
+              left: `${suggestionItem.projectedX}px`,
+              top: `${suggestionItem.projectedY}px`,
+              width: `${suggestionItem.projectedWidth}px`,
+              height: `${suggestionItem.projectedHeight}px`,
+            }}
           />
         )
       case "switch":
@@ -544,6 +577,9 @@ const DynamicSuggestions = () => {
             control={
               <Switch
                 sx={{
+                  // position: "absolute",
+                  // left: `${suggestionItem.projectedX}px`,
+                  // top: `${suggestionItem.projectedY}px`,
                   "& .MuiSwitch-switchBase.Mui-checked": {
                     color: "#00008B",
                     "&:hover": {
@@ -558,7 +594,15 @@ const DynamicSuggestions = () => {
             }
             label={suggestionItem.text}
             labelPlacement="start"
-            sx={{ color: "black" }}
+            sx={{
+              color: "black",
+              position: "absolute",
+              left: `${suggestionItem.projectedX}px`,
+              top: `${suggestionItem.projectedY}px`,
+              width: `${suggestionItem.projectedWidth}px`,
+              height: `${suggestionItem.projectedHeight}px`,
+              // transform: `translateX(${suggestionItem.projectedWidth / 2}px)`,
+            }}
           />
         )
       default:
@@ -589,9 +633,15 @@ const DynamicSuggestions = () => {
                         rowGap: 1.5,
                         justifyContent: "center",
                         alignItems: "center",
+                        position: "relative",
+                        width: `${PREVIEW_WIDTH}px`,
+                        height: `${PREVIEW_HEIGHT}px`,
+                        // border: "1px solid black",
                       }}
                     >
-                      {suggestionSet.items.map((suggestedItem) => displaySuggestedItems(suggestedItem))}
+                      {calculateProjectedProperties(suggestionSet.items).map((suggestedItem) =>
+                        displaySuggestedItems(suggestedItem),
+                      )}
                     </Box>
                   </Box>
 
@@ -618,7 +668,7 @@ const DynamicSuggestions = () => {
                     <Button
                       onClick={() => onHandleSuggestionApply(suggestionSet.items)}
                       sx={{
-                        width: "60px",
+                        width: "90px",
                         fontSize: "10px",
                         color: "black",
                         backgroundColor: "#d9e7d6",
