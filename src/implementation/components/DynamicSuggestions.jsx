@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Grid, Paper, IconButton, Tooltip, Box, Button, Typography, Switch, FormControlLabel } from "@mui/material"
 import InfoIcon from "@mui/icons-material/Info"
 import { canvasDroppedItemsAtom } from "../store/droppedItems.atom"
@@ -32,6 +32,15 @@ const lightenColor = (color, percent) => {
   )
 }
 
+const determineSizeSuggestionLink = () => {
+  // randomly return link
+  const links = [
+    "https://m2.material.io/components/buttons#behavior",
+    "https://m2.material.io/design/communication/imagery.html#usage",
+  ]
+  return links[Math.floor(Math.random() * links.length)]
+}
+
 const generateSizeSuggestions = (droppedItems, screenWidth, screenHeight) => {
   // https://m2.material.io/components/buttons#behavior
   // https://m2.material.io/design/communication/imagery.html#usage
@@ -62,11 +71,12 @@ const generateSizeSuggestions = (droppedItems, screenWidth, screenHeight) => {
 
   if (suggestions.length > 0) {
     const elementList = oversizedElements.join(", ")
+
     return [
       {
         items: [...updatedItems, ...suggestions],
         suggestion: `The following elements are too large: ${elementList}. Consider reducing their size.`,
-        suggestionLink: "https://material.io/design/layout/understanding-layout.html",
+        suggestionLink: determineSizeSuggestionLink(),
       },
     ]
   }
@@ -74,14 +84,11 @@ const generateSizeSuggestions = (droppedItems, screenWidth, screenHeight) => {
   return []
 }
 // https://matthewjamestaylor.com/responsive-font-size#:~:text=The%20consensus%20is%20mobile%20font,large%20devices%20is%2018px%20%2D%2020px.
+// font calculation calc(15px + 0.390625vw)
 const getSuggestedFontSize = (screenWidth) => {
-  if (screenWidth <= 600) {
-    return 16 // mobile devices
-  } else if (screenWidth <= 960) {
-    return 18 // tablet devices
-  } else {
-    return 20 // desktop devices
-  }
+  const convertViewPortPercentageToDecimal = 0.390625 / 100
+  const calcFontSize = 15 + convertViewPortPercentageToDecimal * screenWidth
+  return calcFontSize
 }
 
 const generateFontSizeSuggestions = (droppedItems) => {
@@ -129,6 +136,7 @@ const generateTextContentSuggestions = (droppedItems, screenWidth) => {
   const textContentSuggestions = []
   const updatedItems = []
   // average character width is a rough estimate commonly used in calculations where precise font metrics are not available.
+  // https://www.math.utah.edu/~beebe/fonts/afm-widths.html
   const AVERAGE_CHAR_WIDTH = 10
 
   const maxTextLength = Math.floor((screenWidth * 0.9) / AVERAGE_CHAR_WIDTH) // Calculate maximum number of characters based on screen width
@@ -155,7 +163,7 @@ const generateTextContentSuggestions = (droppedItems, screenWidth) => {
       {
         items: [...updatedItems, ...textContentSuggestions],
         suggestion: "Consider adding or shortening text for the following elements.",
-        suggestionLink: "https://m2.material.io/components/buttons#anatomy",
+        suggestionLink: "https://m2.material.io/design/usability/accessibility.html#writing",
       },
     ]
   }
@@ -168,11 +176,11 @@ const generateSpacingSuggestions = (droppedItems, screenWidth, screenHeight) => 
   const updatedItems = [...droppedItems]
 
   // Define minimum distance and additional spacing based on screen dimensions
-  const minDistance = Math.sqrt((screenWidth * 0.05) ** 2 + (screenHeight * 0.05) ** 2) // Example: 5% of screen width and height
-  const additionalSpacingX = screenWidth * 0.1 // Example: 10% of screen width
-  const additionalSpacingY = screenHeight * 0.05 // Example: 5% of screen height
+  const minDistance = Math.sqrt((screenWidth * 0.05) ** 2 + (screenHeight * 0.05) ** 2) // 5% of screen width and height
+  const additionalSpacingX = screenWidth * 0.1 //  10% of screen width
+  const additionalSpacingY = screenHeight * 0.05 //  5% of screen height
 
-  // Example: Suggest adding spacing between elements that are too close
+  // suggest adding spacing between elements that are too close
   for (let i = 0; i < droppedItems.length - 1; i++) {
     const item1 = droppedItems[i]
     const item2 = droppedItems[i + 1]
@@ -466,7 +474,7 @@ const generateSuggestions = (droppedItems, screenWidth, screenHeight) => {
   //   suggestions.push(...aspectRatioSuggestions)
   // }
 
-  // Suggestion 11: Creative suggestions for buttons and switches
+  // Suggestion 10: Creative suggestions for buttons and switches
   const creativeSuggestions = generateCreativeSuggestions(droppedItems)
   if (creativeSuggestions.length > 0) {
     suggestions.push(...creativeSuggestions)
@@ -481,11 +489,11 @@ const generateSuggestions = (droppedItems, screenWidth, screenHeight) => {
   return suggestions
 }
 
-// Define your canvas and preview dimensions
-const CANVAS_WIDTH = 768 // Adjust this based on your actual canvas width
+// Variable of canvas and preview dimensions
+const CANVAS_WIDTH = 768 // actual canvas width
 const CANVAS_HEIGHT = 75 * (window.innerHeight / 100) // 75% of the window height
-const PREVIEW_WIDTH = 200 // Adjust this based on your actual preview width
-const PREVIEW_HEIGHT = 200 // Adjust this based on your actual preview height
+const PREVIEW_WIDTH = 200 // actual preview width
+const PREVIEW_HEIGHT = 200 // actual preview height
 
 // Calculate projected properties without modifying original x, y, width, height, and fontSize
 const calculateProjectedProperties = (items) => {
