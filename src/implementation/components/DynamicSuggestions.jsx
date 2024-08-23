@@ -365,8 +365,8 @@ const generateCreativeSuggestions = (droppedItems) => {
 
 const generateSuggestions = (droppedItems, screenWidth, screenHeight) => {
   const suggestions = []
-  // Suggestion 1: If there is no title text item between y-coordinate 7-116, add a title item
-  const hasTitleText = droppedItems.some((item) => item.type === "text" && item.y > 7 && item.y < 116)
+  // Suggestion 1: If there is no title text item between y-coordinate 0-116, add a title item
+  const hasTitleText = droppedItems.some((item) => item.type === "text" && item.y > 0 && item.y < 116)
   const suggestion1 = !hasTitleText
     ? [
         {
